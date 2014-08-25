@@ -43,6 +43,7 @@ namespace SmartHome.Handler
                 Console.WriteLine("Uknown application error. Sorry :'(");
                 Console.WriteLine(e.GetType().Name);
                 Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
                 Console.ReadLine();
             }
         }

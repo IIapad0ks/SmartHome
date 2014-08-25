@@ -47,7 +47,7 @@
     <Compile Include="Conditioner.cs" />
     <Compile Include="ISwitchController.cs" />
     <Compile Include="IValueController.cs" />
-    <Compile Include="IValueSensor.cs" />
+    <Compile Include="ValueSensor.cs" />
     <Compile Include="Light.cs" />
     <Compile Include="LightSwitcher.cs" />
     <Compile Include="OnValue.cs" />

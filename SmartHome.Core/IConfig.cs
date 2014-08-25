@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SmartHome.Core;
 
-namespace SmartHome.CoreObjects
+namespace SmartHome.Core
 {
-    public interface IValueSensor : ISensor
+    public interface IConfig
     {
-        int Value { get; set; }
+        string Name { get; set; }
     }
 }

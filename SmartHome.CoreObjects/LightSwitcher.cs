@@ -23,7 +23,7 @@ namespace SmartHome.CoreObjects
                 {
                     this.isOn = value;
                     Console.WriteLine("************************************************************");
-                    Console.WriteLine("{0}: is {1}.", this.GetType().Name, this.isOn ? "on" : "off");
+                    Console.WriteLine("{0}({2}): is {1}.", this.GetType().Name, this.isOn ? "on" : "off", this.Name);
                     Console.WriteLine("************************************************************");
                 }
             }

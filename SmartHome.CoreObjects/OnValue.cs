@@ -19,7 +19,7 @@ namespace SmartHome.CoreObjects
 
         public void Invoke(object sender, EventArgs e)
         {
-            IValueSensor sensor = (IValueSensor)sender;
+            ValueSensor sensor = (ValueSensor)sender;
 
             ParameterExpression value = Expression.Parameter(typeof(int), "value");
             Dictionary<string, object> symbols = new Dictionary<string, object>();

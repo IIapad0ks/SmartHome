@@ -7,10 +7,9 @@ using System.Threading;
 
 namespace SmartHome.Core
 {
-    public interface ISensor : IDisposable
+    public interface ISensor : IConfig, IDisposable
     {
         event EventHandler<EventArgs> onChange;
-        string Name { get; set; }
 
         void StartAsync();
         void Stop();

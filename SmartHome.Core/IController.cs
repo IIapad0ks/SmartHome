@@ -6,8 +6,5 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Core
 {
-    public interface IController
-    {
-        string Name { get; set; }
-    }
+    public interface IController : IConfig { }
 }

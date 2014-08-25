@@ -59,6 +59,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="IConfig.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="ISensor.cs" />
     <Compile Include="ITrigger.cs" />

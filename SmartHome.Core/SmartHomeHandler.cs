@@ -39,7 +39,7 @@ namespace SmartHome.Core
             {
                 if (this.isOn)
                 {
-                    throw new SmartHomeStartException();
+                    throw new SmartHomeException("SmartHome can't be started twice!");
                 }
 
                 this.isOn = true;
@@ -52,7 +52,7 @@ namespace SmartHome.Core
                 List<Type> allowTypes = this.GetAllTypes();
                 if (allowTypes.Count() == 0)
                 {
-                    throw new SmartHomeNotAllowTypesException();
+                    throw new SmartHomeException("SmartHome is not found any appliance.");
                 }
 
                 this.InitHomeObjects(allowTypes);
@@ -63,21 +63,13 @@ namespace SmartHome.Core
                 }
                 Console.WriteLine("SmartHome is started.");
             }
-            catch (SmartHomeStartException)
+            catch (SmartHomeException she)
             {
-                Console.WriteLine("SmartHome can't be started twice!");
-            }
-            catch (SmartHomeNotAllowTypesException)
-            {
-                Console.WriteLine("SmartHome is not found any appliance.");
+                Console.WriteLine(she.Message);
             }
             catch (DirectoryNotFoundException)
             {
                 Console.WriteLine("Directory {0} is not found. I can't load you appliances :'(", this.libDirname);
-            }
-            catch (SmartHomeNotPluginsException)
-            {
-                Console.WriteLine("I can't found any plugins with you appliance :'(");
             }
             catch (FileNotFoundException)
             {
@@ -87,9 +79,9 @@ namespace SmartHome.Core
             {
                 Console.WriteLine("Your configs are bad!");
             }
-            catch (SmartHomeNotConfigException)
+            catch (SmartHomeConfigException shce)
             {
-                Console.WriteLine("Your config file don't have any configs!");
+                Console.WriteLine(shce.Message);
             }
         }   
 
@@ -99,7 +91,7 @@ namespace SmartHome.Core
             {
                 if (!this.isOn)
                 {
-                    throw new SmartHomeStopException();
+                    throw new SmartHomeException("SmartHome can't be stopped. It's not working now :).");
                 }
 
                 foreach (ISensor sensor in this.Sensors)
@@ -110,9 +102,9 @@ namespace SmartHome.Core
                 this.isOn = false;
                 Console.WriteLine("SmartHome is stopped.");
             }
-            catch (SmartHomeStopException)
+            catch (SmartHomeException she)
             {
-                Console.WriteLine("SmartHome can't be stopped. It's not working now :).");
+                Console.WriteLine(she.Message);
             }
         }
 
@@ -128,7 +120,7 @@ namespace SmartHome.Core
             string[] libFilenames = Directory.GetFileSystemEntries(this.libDirname, "SmartHome.*.dll");
             if (libFilenames.Count() == 0)
             {
-                throw new SmartHomeNotPluginsException();
+                throw new SmartHomeException("I can't found any plugins with you appliance :'(");
             }
 
             foreach (string libFilename in libFilenames)
@@ -165,66 +157,78 @@ namespace SmartHome.Core
             List<XElement> configs = configDoc.Element("config").Elements().ToList();
             if (configs.Count() == 0)
             {
-                throw new SmartHomeNotConfigException();
+                throw new SmartHomeConfigException("Your config file don't have any configs!");
             }
 
             foreach (XElement elem in configs)
             {
+                string elemName = elem.Name.ToString();
+
                 try
                 {
                     if (elem.Attribute("type") == null)
                     {
-                        throw new SmartHomeNotConfigTypeException();
+                        throw new SmartHomeConfigException(String.Format("Your {0} don't have attribute {1}! {2}", elemName, "type", elem.ToString()));
                     }
 
-                    var currentTypeSelectResult = from type in allowTypes where type.Name == elem.Attribute("type").Value select type;
+                    string typeName = elem.Attribute("type").Value;
+                    var currentTypeSelectResult = from type in allowTypes where type.Name == typeName select type;
                     if (currentTypeSelectResult == null)
                     {
-                        throw new SmartHomeNotTypeException();
+                        throw new SmartHomePluginException(String.Format("Your plugins don't have type {0}!", typeName));
+                    }
+                    if (currentTypeSelectResult.Count() > 1)
+                    {
+                        throw new SmartHomePluginException(String.Format("Your plugins have more than one type {0}!", typeName));
                     }
 
                     Type currentType = currentTypeSelectResult.First();
 
+                    
                     if (elem.Attribute("name") == null)
                     {
-                        throw new SmartHomeNotConfigNameException();
+                        throw new SmartHomeConfigException(String.Format("Your {0} don't have attribute {1}! {2}", elemName, "name", elem.ToString()));
                     }
-
-                    switch (elem.Name.ToString())
+                    
+                    string configName = elem.Attribute("name").Value;
+                    switch (elemName)
                     {
                         case "controller":
+                            this.CheckConfigName<IController>(configName, this.Controllers, elemName);
                             IController controller = (IController)Activator.CreateInstance(currentType);
-                            controller.Name = elem.Attribute("name").Value;
+                            controller.Name = configName;
                             this.Controllers.Add(controller);
                             break;
                         case "sensor":
+                            this.CheckConfigName<ISensor>(configName, this.Sensors, elemName);
                             ISensor sensor = (ISensor)Activator.CreateInstance(currentType);
-                            sensor.Name = elem.Attribute("name").Value;
+                            sensor.Name = configName;
                             this.Sensors.Add(sensor);
                             break;
                         case "trigger":
+                            this.CheckConfigName<ITrigger>(configName, this.Triggers, elemName);
                             ITrigger trigger = (ITrigger)Activator.CreateInstance(currentType);
 
                             if (elem.Attribute("controller") == null)
                             {
-                                throw new SmartHomeConfigException();
+                                throw new SmartHomeConfigException(String.Format("Your {0} don't have attribute {1}! {2}", elemName, "controller", elem.ToString()));
                             }
 
-                            var searchControllerResult = from c in this.Controllers 
-                                                         where c.Name == elem.Attribute("controller").Value 
+                            string controllerName = elem.Attribute("controller").Value;
+                            var searchControllerResult = from c in this.Controllers
+                                                         where c.Name == controllerName
                                                          select c;
-
-                            if (searchControllerResult == null)
+                            if (!searchControllerResult.Any())
                             {
-                                throw new SmartHomeConfigException();
+                                throw new SmartHomeConfigException(String.Format("Your configs don't have {0} with name {1}! {2}", "controller", controllerName, elem.ToString()));
                             }
 
                             trigger.Controller = searchControllerResult.First();
-                            trigger.Name = elem.Attribute("name").Value;
+                            trigger.Name = configName;
 
                             if (elem.Attribute("condition") == null)
                             {
-                                throw new SmartHomeConfigException();
+                                throw new SmartHomeConfigException(String.Format("Your {0} don't have attribute {1}! {2}", elemName, "condition", elem.ToString()));
                             }
 
                             trigger.Condition = elem.Attribute("condition").Value;
@@ -232,86 +236,54 @@ namespace SmartHome.Core
                             Dictionary<string, string> elemParams = new Dictionary<string, string>();
                             foreach (XElement child in elem.Elements())
                             {
+                                string key = child.Name.ToString();
                                 if (child.Attribute("value") == null)
                                 {
-                                    throw new SmartHomeConfigException();
+                                    throw new SmartHomeConfigException(String.Format("Your {0} parameter {1} don't have attribute {2}! {3}", elemName, key, "value", elem.ToString()));
                                 }
 
-                                elemParams.Add(child.Name.ToString(), child.Attribute("value").Value);
+                                if (elemParams.Any(p => p.Key == key))
+                                {
+                                    throw new SmartHomeConfigException(String.Format("Your {0} have more than one parameter {1}! {2}", elemName, key, elem.ToString()));
+                                }
+
+                                elemParams.Add(key, child.Attribute("value").Value);
                             }
                             trigger.Properties = elemParams;
 
                             if (elem.Attribute("sensor") == null)
                             {
-                                throw new SmartHomeConfigException();
+                                throw new SmartHomeConfigException(String.Format("Your {0} don't have attribute {1}! {2}", elemName, "sensor", elem.ToString()));
                             }
 
+                            string sensorName = elem.Attribute("sensor").Value;
                             var searchSensorResult = from s in this.Sensors
-                                                     where s.Name == elem.Attribute("sensor").Value
+                                                     where s.Name == sensorName
                                                      select s;
-
-                            if (searchSensorResult == null)
+                            if (!searchSensorResult.Any())
                             {
-                                throw new SmartHomeConfigException();
+                                throw new SmartHomeConfigException(String.Format("Your configs don't have {0} with name {1}! {2}", "sensor", sensorName, elem.ToString()));
                             }
 
                             searchSensorResult.First().onChange += trigger.Invoke;
                             break;
                         default:
-                            throw new SmartHomeNotAllowTypeException();
+                            throw new SmartHomeConfigException(String.Format("I don't support config type {0} :'(", elemName));
                     }
                 }
-                catch (SmartHomeNotConfigTypeException)
+                catch (SmartHomePluginException shpe)
                 {
-                    Console.WriteLine("Your config {0} don't have type attribute!", elem.ToString());
-                }
-                catch (SmartHomeNotTypeException)
-                {
-                    Console.WriteLine("Your plugins don't have type {0}!", elem.Attribute("type"));
-                }
-                catch (SmartHomeNotAllowTypeException)
-                {
-                    Console.WriteLine("I don't support type of config {0} :'(", elem.ToString());
+                    Console.WriteLine(shpe.Message);
                 }
                 catch (InvalidCastException)
                 {
-                    Console.WriteLine("Your plugin don't have {0} with type {1}!", elem.Name.ToString(), elem.Attribute("type").Value);
+                    Console.WriteLine("Your plugin don't have {0} with type {1}!", elemName, elem.Attribute("type").Value);
                 }
-                catch (SmartHomeNotConfigNameException)
+                catch (SmartHomeConfigException shce)
                 {
-                    Console.WriteLine("Your {0} don't have name attribute!", elem.Name.ToString());
-                }
-                catch (SmartHomeConfigException)
-                {
-                    Console.WriteLine("Your config {0} is bad!", elem.ToString());
+                    Console.WriteLine(shce.Message);
                 }
             }
-        }
-
-        public static MethodInfo CreateFunction(string function)
-        {
-            string code = @"
-                using System;
-            
-                namespace UserFunctions
-                {                
-                    public class BinaryFunction
-                    {                
-                        public static bool Function(int value)
-                        {
-                            return func_xy;
-                        }
-                    }
-                }
-            ";
-
-            string finalCode = code.Replace("func_xy", function);
-
-            CSharpCodeProvider provider = new CSharpCodeProvider();
-            CompilerResults results = provider.CompileAssemblyFromSource(new CompilerParameters(), finalCode);
-
-            Type binaryFunction = results.CompiledAssembly.GetType("UserFunctions.BinaryFunction");
-            return binaryFunction.GetMethod("Function");
         }
 
         public static int GetNewValue(int currentValue, int minValue, int maxValue, int minStep, int maxStep, ref bool isGrow)
@@ -323,16 +295,13 @@ namespace SmartHome.Core
             }
             return isGrow ? currentValue + step : currentValue - step;   
         }
-    }
 
-    public class SmartHomeStartException : ApplicationException { }
-    public class SmartHomeStopException : ApplicationException { }
-    public class SmartHomeNotAllowTypesException : ApplicationException { }
-    public class SmartHomeNotPluginsException : ApplicationException { }
-    public class SmartHomeNotConfigException : ApplicationException { }
-    public class SmartHomeNotConfigTypeException : ApplicationException { }
-    public class SmartHomeNotTypeException : ApplicationException { }
-    public class SmartHomeNotAllowTypeException : ApplicationException { }
-    public class SmartHomeNotConfigNameException : ApplicationException { }
-    public class SmartHomeConfigException : ApplicationException { }
+        private void CheckConfigName<T>(string configName, List<T> configs, string configType = "config") where T : IConfig
+        {
+            if ((from c in configs where c.Name == configName select c).Count() == 1)
+            {
+                throw new SmartHomeConfigException(String.Format("Your config have more than one {1} with name {0}!", configName, configType));
+            }
+        }
+    }
 }
