@@ -7,12 +7,12 @@ using System.Threading;
 
 namespace SmartHome.Core
 {
-    public interface ISensor
+    public interface ISensor : IDisposable
     {
         event EventHandler<EventArgs> onChange;
         string Name { get; set; }
 
-        void Start();
+        void StartAsync();
         void Stop();
     }
 }

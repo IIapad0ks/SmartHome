@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using SmartHome.Core;
 using System.Threading;
@@ -13,6 +10,7 @@ namespace SmartHome.CoreObjects
         private int value;
         private bool isGrow = true;
         private Timer timer;
+        private object lockObject = new object();
 
         public event EventHandler<EventArgs> onChange;
         public string Name { get; set; }
@@ -20,30 +18,44 @@ namespace SmartHome.CoreObjects
         {
             get
             {
-                return this.value;
+                lock (this.lockObject)
+                {
+                    return this.value;
+                }
             }
             set
             {
-                if (value != this.value)
+                lock (this.lockObject)
                 {
-                    Console.WriteLine("{0}: value changed from {1} to {2}", this.GetType().Name, this.value, value);
-                    this.value = value;  
-                    this.onChange(this, new EventArgs());
+                    if (value != this.value)
+                    {
+                        Console.WriteLine("{0}: value changed from {1} to {2}", this.GetType().Name, this.value, value);
+                        this.value = value;
+                        this.onChange(this, new EventArgs());
+                    }
                 }
             }
         }
 
-        public void Start()
+        public async void StartAsync()
         {
-            this.timer = new Timer(delegate(object state) 
-                {
-                    this.Value = SmartHomeHandler.GetNewValue(this.Value, 10, 40, 1, 5, ref this.isGrow);
-                }, null, 0, 1000);
+            await Task.Run(() =>
+            {
+                this.timer = new Timer(delegate(object state)
+                    {
+                        this.Value = SmartHomeHandler.GetNewValue(this.Value, 10, 40, 1, 5, ref this.isGrow);
+                    }, null, 0, 1000);
+            });
         }
 
         public void Stop()
         {
-            timer.Dispose();
+            this.timer.Dispose();
+        }
+
+        public void Dispose()
+        {
+            this.timer.Dispose();
         }
     }
 }

@@ -13,36 +13,51 @@ namespace SmartHome.CoreObjects
         private int value;
         private bool isGrow = true;
         private Timer timer;
+        private object lockObject = new object();
 
         public int Value { 
             get 
             {
-                return this.value;
+                lock (this.lockObject)
+                {
+                    return this.value;
+                }
             } 
             set 
             {
-                if (value != this.value)
+                lock (this.lockObject)
                 {
-                    Console.WriteLine("{0}: value changed from {1} to {2}", this.GetType().Name, this.value, value);
-                    this.value = value;
-                    this.onChange(this, new EventArgs());
+                    if (value != this.value)
+                    {
+                        Console.WriteLine("{0}: value changed from {1} to {2}", this.GetType().Name, this.value, value);
+                        this.value = value;
+                        this.onChange(this, new EventArgs());
+                    }
                 }
             } 
         }
         public string Name { get; set; }
         public event EventHandler<EventArgs> onChange;
 
-        public void Start()
+        public async void StartAsync()
         {
-            this.timer = new Timer(delegate(object state)
+            await Task.Run(() =>
             {
-                this.Value = SmartHomeHandler.GetNewValue(this.Value, 0, 1000, 20, 100, ref this.isGrow);
-            }, null, 0, 1000);
+                this.timer = new Timer(delegate(object state)
+                    {
+                        this.Value = SmartHomeHandler.GetNewValue(this.Value, 0, 1000, 20, 100, ref this.isGrow);
+                    }, null, 0, 1000);
+            });
         }
 
         public void Stop()
         {
-            timer.Dispose();
+            this.timer.Dispose();
+        }
+
+        public void Dispose()
+        {
+            this.timer.Dispose();
         }
     }
 }

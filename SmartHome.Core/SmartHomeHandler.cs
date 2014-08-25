@@ -59,7 +59,7 @@ namespace SmartHome.Core
 
                 foreach (ISensor sensor in this.Sensors)
                 {
-                    sensor.Start();
+                    sensor.StartAsync();
                 }
                 Console.WriteLine("SmartHome is started.");
             }
