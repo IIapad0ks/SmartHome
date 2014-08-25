@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SmartHome.Core;
+using System.Threading;
 
 namespace SmartHome.CoreObjects
 {
-    public class Temperature : ISensor
+    public class Temperature : IValueSensor
     {
         private int value;
         private bool isGrow = true;
+        private Timer timer;
 
         public event EventHandler<EventArgs> onChange;
         public string Name { get; set; }
@@ -31,9 +33,17 @@ namespace SmartHome.CoreObjects
             }
         }
 
-        public void Check(object state)
+        public void Start()
         {
-            this.Value = SmartHomeHandler.GetNewValue(this.Value, 10, 40, 1, 5, ref this.isGrow);
+            this.timer = new Timer(delegate(object state) 
+                {
+                    this.Value = SmartHomeHandler.GetNewValue(this.Value, 10, 40, 1, 5, ref this.isGrow);
+                }, null, 0, 1000);
+        }
+
+        public void Stop()
+        {
+            timer.Dispose();
         }
     }
 }

@@ -8,35 +8,13 @@ using System.Reflection;
 
 namespace SmartHome.CoreObjects
 {
-    public class TurnOffOnValue : ITrigger
+    public class TurnOffOnValue : OnValue
     {
-        private MethodInfo checkMethod;
-        private string condition;
 
-        public Dictionary<string, string> Properties { get; set; }
-        public IController Controller { get; set; }
-        public string Condition
+        public override void TriggerSuccessFunction()
         {
-            get
-            {
-                return this.condition;
-            }
-            set
-            {
-                this.condition = value;
-                checkMethod = SmartHomeHandler.CreateFunction(this.condition);
-            }
-        }
-        public string Name { get; set; }
-
-        public void Invoke(object sender, EventArgs e)
-        {
-            ISensor sensor = (ISensor)sender;
-            if ((bool)this.checkMethod.Invoke(null, new object[] { sensor.Value }))
-            {
-                ISwitchController switchController = (ISwitchController)this.Controller;
-                switchController.Off();
-            }
+            ISwitchController controller = (ISwitchController)this.Controller;
+            controller.Off();
         }
     }
 }

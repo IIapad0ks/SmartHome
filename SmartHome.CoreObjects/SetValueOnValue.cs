@@ -8,35 +8,13 @@ using System.Reflection;
 
 namespace SmartHome.CoreObjects
 {
-    public class SetValueOnValue : ITrigger
+    public class SetValueOnValue : OnValue
     {
-        private string condition;
-        private MethodInfo checkMethod;
 
-        public Dictionary<string, string> Properties { get; set; }
-        public IController Controller { get; set; }
-        public string Condition
+        public override void TriggerSuccessFunction()
         {
-            get
-            {
-                return this.condition;
-            }
-            set
-            {
-                this.condition = value;
-                this.checkMethod = SmartHomeHandler.CreateFunction(this.condition);
-            }    
-        }
-        public string Name { get; set; }
-
-        public void Invoke(object sender, EventArgs e)
-        {
-            ISensor sensor = (ISensor)sender;
-            if ((bool)this.checkMethod.Invoke(null, new object[] { sensor.Value }))
-            {
-                IValueController valueController = (IValueController)this.Controller;
-                valueController.Value = Int32.Parse(this.Properties["value"]);
-            }
+            IValueController controller = (IValueController)this.Controller;
+            controller.Value = Int32.Parse(this.Properties["value"]);
         }
     }
 }

@@ -9,26 +9,34 @@ namespace SmartHome.CoreObjects
 {
     public class LightSwitcher : ISwitchController
     {
+        private bool isOn;
         public string Name { get; set; }
-        public bool isOn { get; set; }
+        public bool IsOn
+        {
+            get
+            {
+                return this.isOn;
+            }
+            set
+            {
+                if (value != this.isOn)
+                {
+                    this.isOn = value;
+                    Console.WriteLine("************************************************************");
+                    Console.WriteLine("{0}: is {1}.", this.GetType().Name, this.isOn ? "on" : "off");
+                    Console.WriteLine("************************************************************");
+                }
+            }
+        }
 
         public void On()
         {
-            if (!this.isOn)
-            {
-                Console.WriteLine("{0}: is on.", this.GetType().Name);
-                this.isOn = true;
-            }
+            this.IsOn = true;
         }
 
         public void Off()
         {
-            if (this.isOn)
-            {
-                Console.WriteLine("{0}: is off.", this.GetType().Name);
-                this.isOn = false;
-            }
-
+            this.IsOn = false;
         }
     }
 }

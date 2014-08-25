@@ -7,11 +7,8 @@ using SmartHome.Core;
 
 namespace SmartHome.CoreObjects
 {
-    public interface ISwitchController : IController
+    public interface IValueSensor : ISensor
     {
-        bool IsOn { get; set; }
-
-        void On();
-        void Off();
+        int Value { get; set; }
     }
 }

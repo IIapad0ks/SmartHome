@@ -12,29 +12,39 @@ namespace SmartHome.Handler
     {
         static void Main(string[] args)
         {
-            SmartHomeHandler home = new SmartHomeHandler("SmartHome.xml", @"libs\");
-
-            do
+            try
             {
-                string command = Console.ReadLine().ToLower();
-                switch (command)
+                SmartHomeHandler home = new SmartHomeHandler("SmartHome.xml", @"libs\");
+
+                do
                 {
-                    case "on":
-                        home.Start();
-                        break;
-                    case "off":
-                        home.Stop();
-                        break;
-                    case "restart":
-                        home.Restart();
-                        break;
-                    case "exit":
-                        return;
-                    default:
-                        Console.WriteLine("I don't understand you :'(");
-                        break;
-                }
-            } while (true);
+                    string command = Console.ReadLine().ToLower();
+                    switch (command)
+                    {
+                        case "on":
+                            home.Start();
+                            break;
+                        case "off":
+                            home.Stop();
+                            break;
+                        case "restart":
+                            home.Restart();
+                            break;
+                        case "exit":
+                            return;
+                        default:
+                            Console.WriteLine("I don't understand you :'(");
+                            break;
+                    }
+                } while (true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Uknown application error. Sorry :'(");
+                Console.WriteLine(e.GetType().Name);
+                Console.WriteLine(e.Message);
+                Console.ReadLine();
+            }
         }
     }
 }

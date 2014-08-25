@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome.Handler", "SmartH
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome.CoreObjects", "SmartHome.CoreObjects\SmartHome.CoreObjects.csproj", "{B5F33EF4-4CBD-44F7-846B-10481F751D3B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome.MyObjects", "SmartHome.MyObjects\SmartHome.MyObjects.csproj", "{D077CA3B-67C8-4789-9992-70E6269D061B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B5F33EF4-4CBD-44F7-846B-10481F751D3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5F33EF4-4CBD-44F7-846B-10481F751D3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5F33EF4-4CBD-44F7-846B-10481F751D3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D077CA3B-67C8-4789-9992-70E6269D061B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D077CA3B-67C8-4789-9992-70E6269D061B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D077CA3B-67C8-4789-9992-70E6269D061B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D077CA3B-67C8-4789-9992-70E6269D061B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

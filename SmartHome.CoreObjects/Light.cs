@@ -8,10 +8,11 @@ using SmartHome.Core;
 
 namespace SmartHome.CoreObjects
 {
-    public class Light : ISensor
+    public class Light : IValueSensor
     {
         private int value;
         private bool isGrow = true;
+        private Timer timer;
 
         public int Value { 
             get 
@@ -31,9 +32,17 @@ namespace SmartHome.CoreObjects
         public string Name { get; set; }
         public event EventHandler<EventArgs> onChange;
 
-        public void Check(object state)
+        public void Start()
         {
-            this.Value = SmartHomeHandler.GetNewValue(this.Value, 0, 1000, 20, 100, ref this.isGrow);
+            this.timer = new Timer(delegate(object state)
+            {
+                this.Value = SmartHomeHandler.GetNewValue(this.Value, 0, 1000, 20, 100, ref this.isGrow);
+            }, null, 0, 1000);
+        }
+
+        public void Stop()
+        {
+            timer.Dispose();
         }
     }
 }

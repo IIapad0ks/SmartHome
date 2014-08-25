@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace SmartHome.Core
 {
@@ -10,8 +11,8 @@ namespace SmartHome.Core
     {
         event EventHandler<EventArgs> onChange;
         string Name { get; set; }
-        int Value { get; set; }
 
-        void Check(object state);
+        void Start();
+        void Stop();
     }
 }
