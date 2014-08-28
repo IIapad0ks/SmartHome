@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Reflection;
 using System.IO;
-using System.Threading;
-using Microsoft.CSharp;
-using System.CodeDom.Compiler;
 using System.Xml;
+using System.Net.Http;
+using System.Threading.Tasks;
+using SmartHome.WebAPI.Models;
+using System.Web;
+using System.Net.Http.Headers;
 
 namespace SmartHome.Core
 {
     public class SmartHomeHandler
     {
+        private const string WebAPIUri = "http://localhost:53605/";
+
         private string configFilename;
         private string libDirname;
         private string[] allowInterfaces = new string[] { "IController", "ISensor", "ITrigger" };
@@ -182,32 +185,31 @@ namespace SmartHome.Core
                         throw new SmartHomePluginException(String.Format("Your plugins have more than one type {0}!", typeName));
                     }
 
-                    Type currentType = currentTypeSelectResult.First();
-
-                    
                     if (elem.Attribute("name") == null)
                     {
                         throw new SmartHomeConfigException(String.Format("Your {0} don't have attribute {1}! {2}", elemName, "name", elem.ToString()));
                     }
-                    
-                    string configName = elem.Attribute("name").Value;
+
+                    Type currentType = currentTypeSelectResult.First();
+                    int typeID = SmartHomeHandler.SaveType(currentType);
+
+                    IConfig config = (IConfig)Activator.CreateInstance(currentType);
+                    config.Name = elem.Attribute("name").Value;
                     switch (elemName)
                     {
                         case "controller":
-                            this.CheckConfigName<IController>(configName, this.Controllers, elemName);
-                            IController controller = (IController)Activator.CreateInstance(currentType);
-                            controller.Name = configName;
+                            this.CheckConfigName<IController>(config.Name, this.Controllers, elemName);
+                            IController controller = (IController)config;
                             this.Controllers.Add(controller);
                             break;
                         case "sensor":
-                            this.CheckConfigName<ISensor>(configName, this.Sensors, elemName);
-                            ISensor sensor = (ISensor)Activator.CreateInstance(currentType);
-                            sensor.Name = configName;
+                            this.CheckConfigName<ISensor>(config.Name, this.Sensors, elemName);
+                            ISensor sensor = (ISensor)config;
                             this.Sensors.Add(sensor);
                             break;
                         case "trigger":
-                            this.CheckConfigName<ITrigger>(configName, this.Triggers, elemName);
-                            ITrigger trigger = (ITrigger)Activator.CreateInstance(currentType);
+                            this.CheckConfigName<ITrigger>(config.Name, this.Triggers, elemName);
+                            ITrigger trigger = (ITrigger)config;
 
                             if (elem.Attribute("controller") == null)
                             {
@@ -224,7 +226,6 @@ namespace SmartHome.Core
                             }
 
                             trigger.Controller = searchControllerResult.First();
-                            trigger.Name = configName;
 
                             if (elem.Attribute("condition") == null)
                             {
@@ -265,11 +266,20 @@ namespace SmartHome.Core
                                 throw new SmartHomeConfigException(String.Format("Your configs don't have {0} with name {1}! {2}", "sensor", sensorName, elem.ToString()));
                             }
 
-                            searchSensorResult.First().onChange += trigger.Invoke;
+                            ISensor triggerSensor = searchSensorResult.First();
+                            triggerSensor.onChange += trigger.Invoke;
+                            triggerSensor.onChange += (object sender, EventArgs args) =>
+                            {
+                                SmartHomeHandler.SaveConfigEvent((IConfig)sender, "change");
+                            };
+
+                            this.Triggers.Add(trigger);
                             break;
                         default:
                             throw new SmartHomeConfigException(String.Format("I don't support config type {0} :'(", elemName));
                     }
+
+                    config.ID = SmartHomeHandler.SaveConfig(config, typeID);
                 }
                 catch (SmartHomePluginException shpe)
                 {
@@ -301,6 +311,65 @@ namespace SmartHome.Core
             if ((from c in configs where c.Name == configName select c).Count() == 1)
             {
                 throw new SmartHomeConfigException(String.Format("Your config have more than one {1} with name {0}!", configName, configType));
+            }
+        }
+
+        public static int SaveType(Type type)
+        {
+            int? id = null;
+            if (type.BaseType != null && type.BaseType.GetInterfaces().Any(i => i.Name == "IConfig"))
+            {
+                id = SmartHomeHandler.SaveType(type.BaseType);
+            }
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(SmartHomeHandler.WebAPIUri);
+                HttpResponseMessage response = client.PostAsJsonAsync("api/ObjectType", new ObjectType() { Name = type.FullName, ParentId = id }).Result;
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new SmartHomeConfigException(String.Format("I can't save or find your config type {0} :'(", type.Name));
+                }
+
+                id = response.Content.ReadAsAsync<ObjectType>().Result.Id;
+            }
+
+            return (int)id;
+        }
+
+        public static int SaveConfig(IConfig config, int typeID)
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(SmartHomeHandler.WebAPIUri);
+            HttpResponseMessage response = client.PostAsJsonAsync("api/Appliance", new Appliance() { Name = config.Name, TypeId = typeID }).Result;
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new SmartHomeConfigException(String.Format("I can't save your config {0} :'(", config.Name));
+            }
+
+            return response.Content.ReadAsAsync<Appliance>().Result.Id;
+        }
+
+        public static void SaveConfigEvent(IConfig config, string action)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(SmartHomeHandler.WebAPIUri);
+                    HttpResponseMessage response = client.PostAsJsonAsync("api/EventLog", new EventLog() { ObjectId = config.ID, Action = action, Datetime = DateTime.Now, ObjectState = config.WriteXml() }).Result;
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw new SmartHomeConfigException(String.Format("I can't save '{1}' config event: action - {0}!  :'(", action, config.Name));
+                    }
+                }
+            }
+            catch (SmartHomeConfigException shce)
+            {
+                Console.WriteLine(shce.Message);
             }
         }
     }

@@ -7,11 +7,14 @@ using SmartHome.Core;
 using System.Reflection;
 using System.Linq.Dynamic;
 using System.Linq.Expressions;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace SmartHome.CoreObjects
 {
     public abstract class OnValue : ITrigger
     {
+        public int ID { get; set; }
         public Dictionary<string, string> Properties { get; set; }
         public IController Controller { get; set; }
         public string Condition { get; set; }
@@ -19,7 +22,7 @@ namespace SmartHome.CoreObjects
 
         public void Invoke(object sender, EventArgs e)
         {
-            ValueSensor sensor = (ValueSensor)sender;
+            IValueSensor sensor = (IValueSensor)sender;
 
             ParameterExpression value = Expression.Parameter(typeof(int), "value");
             Dictionary<string, object> symbols = new Dictionary<string, object>();
@@ -35,5 +38,26 @@ namespace SmartHome.CoreObjects
         }
 
         public abstract void TriggerSuccessFunction();
+
+        public virtual string WriteXml()
+        {
+            XmlSerializer serializer = new XmlSerializer(this.GetType());
+            StringWriter writer = new StringWriter();
+            serializer.Serialize(writer, this);
+            return writer.ToString();
+        }
+
+        public virtual void ReadXml(string xml)
+        {
+            XmlSerializer serializer = new XmlSerializer(this.GetType());
+            StringReader reader = new StringReader(xml);
+            ITrigger trigger = (ITrigger)serializer.Deserialize(reader);
+
+            this.ID = trigger.ID;
+            this.Name = trigger.Name;
+            this.Condition = trigger.Condition;
+            this.Controller = trigger.Controller;
+            this.Properties = trigger.Properties;
+        }
     }
 }

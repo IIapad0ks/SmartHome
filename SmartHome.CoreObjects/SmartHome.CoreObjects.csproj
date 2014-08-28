@@ -47,6 +47,9 @@
     <Compile Include="Conditioner.cs" />
     <Compile Include="ISwitchController.cs" />
     <Compile Include="IValueController.cs" />
+    <Compile Include="IValueSensor.cs" />
+    <Compile Include="SwitchController.cs" />
+    <Compile Include="SwitchValueController.cs" />
     <Compile Include="ValueSensor.cs" />
     <Compile Include="Light.cs" />
     <Compile Include="LightSwitcher.cs" />
@@ -64,7 +67,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
