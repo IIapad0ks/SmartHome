@@ -1,0 +1,28 @@
+﻿@model IEnumerable<SmartHome.WebAPI.Models.HomeModel>
+
+@{
+    ViewBag.Title = "Devices";
+}
+
+<h2>Devices</h2>
+
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Device.Name)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Device.Name)
+            (@Html.DisplayFor(modelItem => item.Type.Name))
+        </td>
+        <td>
+            @Html.ActionLink("Details", "Details", new { id=item.Device.Id })
+        </td>
+    </tr>
+}
+
+</table>

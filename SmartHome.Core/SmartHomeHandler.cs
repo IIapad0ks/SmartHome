@@ -23,6 +23,14 @@ namespace SmartHome.Core
         private int saveEventPeriod = 60000;
         private Timer saveEventTimer;
 
+        public bool IsOn
+        {
+            get
+            {
+                return this.isOn;
+            }
+        }
+
         public List<IController> Controllers { get; set; }
         public List<ISensor> Sensors { get; set; }
         public List<ITrigger> Triggers { get; set; }

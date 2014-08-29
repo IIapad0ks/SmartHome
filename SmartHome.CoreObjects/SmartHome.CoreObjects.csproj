@@ -75,8 +75,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "$(SolutionDir)SmartHome.Handler\bin\Debug\libs\$(TargetFileName)"
-copy /Y "$(TargetDir)System.Linq.Dynamic.dll" "$(SolutionDir)SmartHome.Handler\bin\Debug\libs\System.Linq.Dynamic.dll"</PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(TargetPath)" "$(SolutionDir)SmartHome.Service\bin\libs\$(TargetFileName)"
+copy /Y "$(TargetDir)System.Linq.Dynamic.dll" "$(SolutionDir)SmartHome.Service\bin\libs\System.Linq.Dynamic.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
