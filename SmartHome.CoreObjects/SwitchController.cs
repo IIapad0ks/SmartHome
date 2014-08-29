@@ -30,7 +30,7 @@ namespace SmartHome.CoreObjects
                     Console.WriteLine("{0}({2}): is {1}.", this.GetType().Name, this.isOn ? "on" : "off", this.Name);
                     Console.WriteLine("************************************************************");
 
-                    SmartHomeHandler.SaveConfigEvent(this, this.isOn ? "turnOn" : "turnOff");
+                    WebAPIManager.AddEvent(this, this.isOn ? "turnOn" : "turnOff");
                 }
             }
         }

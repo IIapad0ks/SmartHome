@@ -31,6 +31,7 @@ namespace SmartHome.Handler
                             home.Restart();
                             break;
                         case "exit":
+                            home.Stop();
                             return;
                         default:
                             Console.WriteLine("I don't understand you :'(");

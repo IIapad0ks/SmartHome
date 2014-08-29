@@ -41,4 +41,16 @@ namespace SmartHome.Core
           System.Runtime.Serialization.StreamingContext context)
             : base(info, context) { }
     }
+
+    [Serializable]
+    public class SmartHomeWebAPIException : ApplicationException
+    {
+        public SmartHomeWebAPIException() { }
+        public SmartHomeWebAPIException(string message) : base(message) { }
+        public SmartHomeWebAPIException(string message, Exception inner) : base(message, inner) { }
+        protected SmartHomeWebAPIException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context)
+            : base(info, context) { }
+    }
 }

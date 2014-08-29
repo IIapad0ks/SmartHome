@@ -63,15 +63,17 @@ namespace SmartHome.WebAPI.Controllers
         }
 
         // POST api/EventLog
-        public HttpResponseMessage PostEventLog(EventLog eventlog)
+        public HttpResponseMessage PostEventLog(List<EventLog> eventlogs)
         {
             if (ModelState.IsValid)
             {
-                db.EventLogs.Add(eventlog);
+                foreach (EventLog eventlog in eventlogs)
+                {
+                    db.EventLogs.Add(eventlog);
+                }
                 db.SaveChanges();
 
-                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, eventlog);
-                response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = eventlog.Id }));
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
                 return response;
             }
             else

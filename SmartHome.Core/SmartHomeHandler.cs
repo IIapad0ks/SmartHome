@@ -10,17 +10,18 @@ using System.Threading.Tasks;
 using SmartHome.WebAPI.Models;
 using System.Web;
 using System.Net.Http.Headers;
+using System.Threading;
 
 namespace SmartHome.Core
 {
-    public class SmartHomeHandler
+    public class SmartHomeHandler : IDisposable
     {
-        private const string WebAPIUri = "http://localhost:53605/";
-
         private string configFilename;
         private string libDirname;
         private string[] allowInterfaces = new string[] { "IController", "ISensor", "ITrigger" };
         private bool isOn = false;
+        private int saveEventPeriod = 60000;
+        private Timer saveEventTimer;
 
         public List<IController> Controllers { get; set; }
         public List<ISensor> Sensors { get; set; }
@@ -62,8 +63,14 @@ namespace SmartHome.Core
 
                 foreach (ISensor sensor in this.Sensors)
                 {
+                    sensor.TimerPeriod = 1000; //1 second
                     sensor.StartAsync();
                 }
+
+                this.saveEventTimer = new Timer((object state) =>
+                {
+                    WebAPIManager.SaveEvents();
+                }, null, this.saveEventPeriod, this.saveEventPeriod);
                 Console.WriteLine("SmartHome is started.");
             }
             catch (SmartHomeException she)
@@ -102,6 +109,8 @@ namespace SmartHome.Core
                     sensor.Stop();
                 }
 
+                this.saveEventTimer.Dispose();
+                WebAPIManager.SaveEvents();
                 this.isOn = false;
                 Console.WriteLine("SmartHome is stopped.");
             }
@@ -191,7 +200,7 @@ namespace SmartHome.Core
                     }
 
                     Type currentType = currentTypeSelectResult.First();
-                    int typeID = SmartHomeHandler.SaveType(currentType);
+                    int typeID = WebAPIManager.SaveType(currentType);
 
                     IConfig config = (IConfig)Activator.CreateInstance(currentType);
                     config.Name = elem.Attribute("name").Value;
@@ -270,7 +279,7 @@ namespace SmartHome.Core
                             triggerSensor.onChange += trigger.Invoke;
                             triggerSensor.onChange += (object sender, EventArgs args) =>
                             {
-                                SmartHomeHandler.SaveConfigEvent((IConfig)sender, "change");
+                                WebAPIManager.AddEvent((IConfig)sender, "change");
                             };
 
                             this.Triggers.Add(trigger);
@@ -279,7 +288,7 @@ namespace SmartHome.Core
                             throw new SmartHomeConfigException(String.Format("I don't support config type {0} :'(", elemName));
                     }
 
-                    config.ID = SmartHomeHandler.SaveConfig(config, typeID);
+                    config.ID = WebAPIManager.SaveConfig(config, typeID);
                 }
                 catch (SmartHomePluginException shpe)
                 {
@@ -314,63 +323,14 @@ namespace SmartHome.Core
             }
         }
 
-        public static int SaveType(Type type)
+        public void Dispose()
         {
-            int? id = null;
-            if (type.BaseType != null && type.BaseType.GetInterfaces().Any(i => i.Name == "IConfig"))
-            {
-                id = SmartHomeHandler.SaveType(type.BaseType);
-            }
-
-            using (HttpClient client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(SmartHomeHandler.WebAPIUri);
-                HttpResponseMessage response = client.PostAsJsonAsync("api/ObjectType", new ObjectType() { Name = type.FullName, ParentId = id }).Result;
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new SmartHomeConfigException(String.Format("I can't save or find your config type {0} :'(", type.Name));
-                }
-
-                id = response.Content.ReadAsAsync<ObjectType>().Result.Id;
-            }
-
-            return (int)id;
+            this.Dispose(true);
         }
-
-        public static int SaveConfig(IConfig config, int typeID)
+        
+        private void Dispose(bool flag)
         {
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(SmartHomeHandler.WebAPIUri);
-            HttpResponseMessage response = client.PostAsJsonAsync("api/Appliance", new Appliance() { Name = config.Name, TypeId = typeID }).Result;
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new SmartHomeConfigException(String.Format("I can't save your config {0} :'(", config.Name));
-            }
-
-            return response.Content.ReadAsAsync<Appliance>().Result.Id;
-        }
-
-        public static void SaveConfigEvent(IConfig config, string action)
-        {
-            try
-            {
-                using (HttpClient client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri(SmartHomeHandler.WebAPIUri);
-                    HttpResponseMessage response = client.PostAsJsonAsync("api/EventLog", new EventLog() { ObjectId = config.ID, Action = action, Datetime = DateTime.Now, ObjectState = config.WriteXml() }).Result;
-
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        throw new SmartHomeConfigException(String.Format("I can't save '{1}' config event: action - {0}!  :'(", action, config.Name));
-                    }
-                }
-            }
-            catch (SmartHomeConfigException shce)
-            {
-                Console.WriteLine(shce.Message);
-            }
+            this.saveEventTimer.Dispose();
         }
     }
 }

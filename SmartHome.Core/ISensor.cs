@@ -9,6 +9,7 @@ namespace SmartHome.Core
 {
     public interface ISensor : IConfig, IDisposable
     {
+        int TimerPeriod { get; set; }
         event EventHandler<EventArgs> onChange;
 
         void StartAsync();

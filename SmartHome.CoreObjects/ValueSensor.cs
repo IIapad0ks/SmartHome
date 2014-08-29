@@ -14,12 +14,14 @@ namespace SmartHome.CoreObjects
     public abstract class ValueSensor : IValueSensor
     {
         private int value;
+        [NonSerialized()]
         private Timer timer;
         private object lockObject = new object();
 
         protected bool isGrow = true;
 
         public int ID { get; set; }
+        public int TimerPeriod { get; set; }
         public int Value
         {
             get
@@ -61,7 +63,7 @@ namespace SmartHome.CoreObjects
         {
             await Task.Run(() =>
             {
-                this.timer = new Timer(this.Check, null, 0, 1000);
+                this.timer = new Timer(this.Check, null, 0, this.TimerPeriod);
             });
         }
 

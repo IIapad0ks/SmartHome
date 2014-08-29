@@ -28,7 +28,7 @@ namespace SmartHome.CoreObjects
                     Console.WriteLine("{0}({2}): value set to {1}.", this.GetType().Name, this.value, this.Name);
                     Console.WriteLine("************************************************************");
 
-                    SmartHomeHandler.SaveConfigEvent(this, "changeValue");
+                    WebAPIManager.AddEvent(this, "changeValue");
                 }
             }
         }
