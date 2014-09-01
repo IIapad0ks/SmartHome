@@ -12,10 +12,16 @@ namespace SmartHome.WebAPI.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ObjectType
+    public partial class ConfigType
     {
-        public int Id { get; set; }
+        public ConfigType()
+        {
+            this.Devices = new HashSet<Device>();
+        }
+    
+        public int ID { get; set; }
         public string Name { get; set; }
-        public Nullable<int> ParentId { get; set; }
+    
+        public virtual ICollection<Device> Devices { get; set; }
     }
 }

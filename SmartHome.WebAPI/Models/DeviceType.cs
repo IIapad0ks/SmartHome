@@ -12,15 +12,20 @@ namespace SmartHome.WebAPI.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class EventLog
+    public partial class DeviceType
     {
-        public int ID { get; set; }
-        public int DeviceID { get; set; }
-        public int ActionID { get; set; }
-        public string DeviceState { get; set; }
-        public System.DateTime EventDatetime { get; set; }
+        public DeviceType()
+        {
+            this.Devices = new HashSet<Device>();
+            this.DeviceType1 = new HashSet<DeviceType>();
+        }
     
-        public virtual Action Action { get; set; }
-        public virtual Device Device { get; set; }
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public Nullable<int> ParentID { get; set; }
+    
+        public virtual ICollection<Device> Devices { get; set; }
+        public virtual ICollection<DeviceType> DeviceType1 { get; set; }
+        public virtual DeviceType DeviceType2 { get; set; }
     }
 }

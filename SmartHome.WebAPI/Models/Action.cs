@@ -12,10 +12,16 @@ namespace SmartHome.WebAPI.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Appliance
+    public partial class Action
     {
-        public int Id { get; set; }
+        public Action()
+        {
+            this.EventLogs = new HashSet<EventLog>();
+        }
+    
+        public int ID { get; set; }
         public string Name { get; set; }
-        public int TypeId { get; set; }
+    
+        public virtual ICollection<EventLog> EventLogs { get; set; }
     }
 }

@@ -121,21 +121,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\ApplianceController.cs" />
-    <Compile Include="Controllers\EventLogController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ObjectTypeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Appliance.cs">
+    <Compile Include="Models\Action.cs">
+      <DependentUpon>SmartHomeDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ConfigType.cs">
+      <DependentUpon>SmartHomeDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ConfigTypeRepository.cs" />
+    <Compile Include="Models\Device.cs">
+      <DependentUpon>SmartHomeDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeviceRepository.cs" />
+    <Compile Include="Models\DeviceType.cs">
       <DependentUpon>SmartHomeDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\EventLog.cs">
-      <DependentUpon>SmartHomeDBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\HomeModel.cs" />
-    <Compile Include="Models\ObjectType.cs">
       <DependentUpon>SmartHomeDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SmartHomeDBModel.Context.cs">
@@ -153,6 +156,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SmartHomeDBModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\WebAPIModels\Action.cs" />
+    <Compile Include="Models\WebAPIModels\ConfigType.cs" />
+    <Compile Include="Models\WebAPIModels\Device.cs" />
+    <Compile Include="Models\WebAPIModels\DeviceType.cs" />
+    <Compile Include="Models\DeviceTypeRepository.cs" />
+    <Compile Include="Models\WebAPIModels\EventLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\SmartHomeServiceReference\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -164,7 +173,27 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="App_Data\SmartHomeDB.mdf" />
+    <Content Include="App_Data\SmartHomeDB_log.ldf">
+      <DependentUpon>SmartHomeDB.mdf</DependentUpon>
+    </Content>
     <Content Include="Global.asax" />
+    <EntityDeploy Include="Models\SmartHomeDBModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+    </EntityDeploy>
+    <Content Include="Models\SmartHomeDBModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SmartHomeDBModel.edmx</DependentUpon>
+      <LastGenOutput>SmartHomeDBModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\SmartHomeDBModel.edmx.diagram">
+      <DependentUpon>SmartHomeDBModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\SmartHomeDBModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SmartHomeDBModel.edmx</DependentUpon>
+      <LastGenOutput>SmartHomeDBModel.cs</LastGenOutput>
+    </Content>
     <None Include="Service References\SmartHomeServiceReference\SmartHomeService.disco" />
     <None Include="Service References\SmartHomeServiceReference\configuration91.svcinfo" />
     <None Include="Service References\SmartHomeServiceReference\configuration.svcinfo" />
@@ -195,28 +224,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EntityDeploy Include="Models\SmartHomeDBModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>SmartHomeDBModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Models\SmartHomeDBModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>SmartHomeDBModel.edmx</DependentUpon>
-      <LastGenOutput>SmartHomeDBModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\SmartHomeDBModel.edmx.diagram">
-      <DependentUpon>SmartHomeDBModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\SmartHomeDBModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>SmartHomeDBModel.edmx</DependentUpon>
-      <LastGenOutput>SmartHomeDBModel.cs</LastGenOutput>
-    </Content>
+    <Folder Include="Controllers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\Index.cshtml" />

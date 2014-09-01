@@ -9,9 +9,10 @@ using SmartHome.Core;
 
 namespace SmartHome.Service
 {
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class SmartHomeService : ISmartHomeService
     {
-        private SmartHomeHandler home = new SmartHomeHandler("SmartHome.xml", @"libs\");
+        private SmartHomeHandler home = new SmartHomeHandler(@"E:\Bohdan\dotnet_workspace\SmartHome\SmartHome.Service\bin\SmartHome.xml", @"E:\Bohdan\dotnet_workspace\SmartHome\SmartHome.Service\bin\libs\");
 
         public void Start()
         {

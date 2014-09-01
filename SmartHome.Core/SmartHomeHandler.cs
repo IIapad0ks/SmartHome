@@ -117,7 +117,11 @@ namespace SmartHome.Core
                     sensor.Stop();
                 }
 
-                this.saveEventTimer.Dispose();
+                if (this.saveEventTimer != null)
+                {
+                    this.saveEventTimer.Dispose();
+                }
+
                 WebAPIManager.SaveEvents();
                 this.isOn = false;
                 Console.WriteLine("SmartHome is stopped.");

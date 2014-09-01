@@ -25,8 +25,10 @@ namespace SmartHome.WebAPI.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<Appliance> Appliances { get; set; }
+        public DbSet<Action> Actions { get; set; }
+        public DbSet<ConfigType> ConfigTypes { get; set; }
+        public DbSet<Device> Devices { get; set; }
+        public DbSet<DeviceType> DeviceTypes { get; set; }
         public DbSet<EventLog> EventLogs { get; set; }
-        public DbSet<ObjectType> ObjectTypes { get; set; }
     }
 }

@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SmartHome.Core;
-using System.Xml.Linq;
 
 namespace SmartHome.Handler
 {
@@ -14,7 +8,7 @@ namespace SmartHome.Handler
         {
             try
             {
-                SmartHomeHandler home = new SmartHomeHandler("SmartHome.xml", @"libs\");
+                SmartHomeServiceReference.SmartHomeServiceClient client = new SmartHomeServiceReference.SmartHomeServiceClient();
 
                 do
                 {
@@ -22,16 +16,16 @@ namespace SmartHome.Handler
                     switch (command)
                     {
                         case "on":
-                            home.Start();
+                            client.Start();
                             break;
                         case "off":
-                            home.Stop();
+                            client.Stop();
                             break;
                         case "restart":
-                            home.Restart();
+                            client.Restart();
                             break;
                         case "exit":
-                            home.Stop();
+                            client.Stop();
                             return;
                         default:
                             Console.WriteLine("I don't understand you :'(");
