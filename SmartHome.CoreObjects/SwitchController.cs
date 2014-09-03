@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using SmartHome.Core;
+using SmartHome.Core.SmartHome;
 
 namespace SmartHome.CoreObjects
 {
@@ -14,6 +14,9 @@ namespace SmartHome.CoreObjects
         private bool isOn;
 
         public int ID { get; set; }
+        public int TypeID { get; set; }
+
+        public event EventHandler<SaveEventsManagerArgs> onEvent;
 
         public bool IsOn
         {
@@ -30,7 +33,7 @@ namespace SmartHome.CoreObjects
                     Console.WriteLine("{0}({2}): is {1}.", this.GetType().Name, this.isOn ? "on" : "off", this.Name);
                     Console.WriteLine("************************************************************");
 
-                    WebAPIManager.AddEvent(this, this.isOn ? "turnOn" : "turnOff");
+                    this.onEvent(this, new SaveEventsManagerArgs(this.isOn ? "turnOn" : "turnOff"));
                 }
             }
         }
@@ -63,6 +66,11 @@ namespace SmartHome.CoreObjects
 
             this.Name = switchController.Name;
             this.isOn = switchController.IsOn;
+        }
+
+        protected void initEvent(string actionName)
+        {
+            this.onEvent(this, new SaveEventsManagerArgs(actionName));
         }
     }
 }

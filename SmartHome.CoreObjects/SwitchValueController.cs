@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SmartHome.Core;
 using System.Xml.Serialization;
 using System.IO;
+using SmartHome.Core.SmartHome;
 
 namespace SmartHome.CoreObjects
 {
@@ -28,7 +29,7 @@ namespace SmartHome.CoreObjects
                     Console.WriteLine("{0}({2}): value set to {1}.", this.GetType().Name, this.value, this.Name);
                     Console.WriteLine("************************************************************");
 
-                    WebAPIManager.AddEvent(this, "changeValue");
+                    this.initEvent("changeValue");
                 }
             }
         }

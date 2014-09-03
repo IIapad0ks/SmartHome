@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using SmartHome.Core;
+using SmartHome.Core.SmartHome;
 using System.Threading;
 using System.Xml.Serialization;
 using System.IO;
@@ -19,8 +16,9 @@ namespace SmartHome.CoreObjects
         private object lockObject = new object();
 
         protected bool isGrow = true;
-
+        
         public int ID { get; set; }
+        public int TypeID { get; set; }
         public int TimerPeriod { get; set; }
         public int Value
         {
@@ -43,6 +41,7 @@ namespace SmartHome.CoreObjects
                         try
                         {
                             this.onChange(this, new EventArgs());
+                            this.onEvent(this, new SaveEventsManagerArgs("changeValue"));
                         }
                         catch (Exception e)
                         {
@@ -58,6 +57,7 @@ namespace SmartHome.CoreObjects
         }
 
         public event EventHandler<EventArgs> onChange;
+        public event EventHandler<SaveEventsManagerArgs> onEvent;
 
         public async void StartAsync()
         {
@@ -86,11 +86,10 @@ namespace SmartHome.CoreObjects
         {
             XmlSerializer serializer = new XmlSerializer(this.GetType());
             StringReader reader = new StringReader(xml);
-            using (IValueSensor valueSensor = (IValueSensor)serializer.Deserialize(reader))
-            {
-                this.Name = valueSensor.Name;
-                this.value = valueSensor.Value;
-            };
+            IValueSensor valueSensor = (IValueSensor)serializer.Deserialize(reader);
+
+            this.Name = valueSensor.Name;
+            this.value = valueSensor.Value;
         }
 
         public void Dispose()

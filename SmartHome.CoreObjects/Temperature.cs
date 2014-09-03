@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using SmartHome.Core;
-using System.Threading;
+﻿using SmartHome.Core.SmartHome;
 
 namespace SmartHome.CoreObjects
 {
@@ -9,7 +6,7 @@ namespace SmartHome.CoreObjects
     {
         protected override void Check(object state)
         {
-            this.Value = SmartHomeHandler.GetNewValue(this.Value, 10, 40, 1, 5, ref this.isGrow);
+            this.Value = Utils.GenerateRandomValue(this.Value, 10, 40, 1, 5, ref this.isGrow);
         }
     }
 }

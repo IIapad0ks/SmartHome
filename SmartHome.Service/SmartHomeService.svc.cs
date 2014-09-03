@@ -1,32 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.ServiceModel.Web;
-using System.Text;
+﻿using System.ServiceModel;
+using SmartHome.Core.SmartHome;
+using SmartHome.Core.Service;
+using SmartHome.Core.Repositories;
+using SmartHome.Core.Entities;
 using SmartHome.Core;
+using SmartHome.DBModelConverter.Repositories;
+using SmartHome.Data.Repositories;
+using SimpleInjector.Extensions;
+using System.Linq;
+using SimpleInjector;
+using System.Data.Entity;
 
 namespace SmartHome.Service
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class SmartHomeService : ISmartHomeService
     {
-        private SmartHomeHandler home = new SmartHomeHandler(@"E:\Bohdan\dotnet_workspace\SmartHome\SmartHome.Service\bin\SmartHome.xml", @"E:\Bohdan\dotnet_workspace\SmartHome\SmartHome.Service\bin\libs\");
+        private ISmartHomeHandler home;
 
-        public void Start()
+        public SmartHomeService()
         {
-            home.Start();
+            this.home = SIManager.Container.GetInstance<ISmartHomeHandler>();
         }
 
-        public void Stop()
+        public bool Start()
         {
-            home.Stop();
+            return home.Start();
         }
 
-        public void Restart()
+        public bool Stop()
         {
-            home.Restart();
+            return home.Stop();
+        }
+
+        public bool Restart()
+        {
+            return home.Restart();
         }
 
         public bool IsOn()

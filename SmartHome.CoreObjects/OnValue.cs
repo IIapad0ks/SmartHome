@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SmartHome.Core;
+using SmartHome.Core.SmartHome;
 using System.Reflection;
 using System.Linq.Dynamic;
 using System.Linq.Expressions;
@@ -15,10 +15,13 @@ namespace SmartHome.CoreObjects
     public abstract class OnValue : ITrigger
     {
         public int ID { get; set; }
+        public int TypeID { get; set; }
         public Dictionary<string, string> Properties { get; set; }
         public IController Controller { get; set; }
         public string Condition { get; set; }
         public string Name { get; set; }
+
+        public event EventHandler<SaveEventsManagerArgs> onEvent;
 
         public void Invoke(object sender, EventArgs e)
         {
@@ -34,6 +37,7 @@ namespace SmartHome.CoreObjects
             if (result)
             {
                 this.TriggerSuccessFunction();
+                this.onEvent(this, new SaveEventsManagerArgs("valueConditionSuccess"));
             }
         }
 

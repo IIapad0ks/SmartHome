@@ -22,16 +22,16 @@ namespace SmartHome.Handler.SmartHomeServiceReference {
         System.Threading.Tasks.Task<bool> StartAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISmartHomeService/Stop", ReplyAction="http://tempuri.org/ISmartHomeService/StopResponse")]
-        void Stop();
+        bool Stop();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISmartHomeService/Stop", ReplyAction="http://tempuri.org/ISmartHomeService/StopResponse")]
-        System.Threading.Tasks.Task StopAsync();
+        System.Threading.Tasks.Task<bool> StopAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISmartHomeService/Restart", ReplyAction="http://tempuri.org/ISmartHomeService/RestartResponse")]
-        void Restart();
+        bool Restart();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISmartHomeService/Restart", ReplyAction="http://tempuri.org/ISmartHomeService/RestartResponse")]
-        System.Threading.Tasks.Task RestartAsync();
+        System.Threading.Tasks.Task<bool> RestartAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISmartHomeService/IsOn", ReplyAction="http://tempuri.org/ISmartHomeService/IsOnResponse")]
         bool IsOn();
@@ -75,19 +75,19 @@ namespace SmartHome.Handler.SmartHomeServiceReference {
             return base.Channel.StartAsync();
         }
         
-        public void Stop() {
-            base.Channel.Stop();
+        public bool Stop() {
+            return base.Channel.Stop();
         }
         
-        public System.Threading.Tasks.Task StopAsync() {
+        public System.Threading.Tasks.Task<bool> StopAsync() {
             return base.Channel.StopAsync();
         }
         
-        public void Restart() {
-            base.Channel.Restart();
+        public bool Restart() {
+            return base.Channel.Restart();
         }
         
-        public System.Threading.Tasks.Task RestartAsync() {
+        public System.Threading.Tasks.Task<bool> RestartAsync() {
             return base.Channel.RestartAsync();
         }
         
