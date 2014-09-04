@@ -17,7 +17,7 @@ namespace SmartHome.SHService
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[] 
             { 
-                new Service1() 
+                new SmartHomeService() 
             };
             ServiceBase.Run(ServicesToRun);
         }

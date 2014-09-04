@@ -1,6 +1,8 @@
 ﻿using SmartHome.Core.Repositories;
 using Models = SmartHome.Core.Models;
 using Entities = SmartHome.Core.Entities;
+using SmartHome.Core;
+using System.Linq;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
@@ -11,11 +13,22 @@ namespace SmartHome.DBModelConverter.Repositories
             this.repository = repository;
         }
 
+        public override bool Remove(int id)
+        {
+            IEventLogRepository eventLogRepository = SIManager.Container.GetInstance<IEventLogRepository>();
+            foreach (var eventLog in eventLogRepository.GetAll().Where(e => e.Action.ID == id))
+            {
+                eventLogRepository.Remove(eventLog.ID);
+            }
+
+            return base.Remove(id);
+        }
+
         public override Models.Action DBItemToItem(Entities.Action dbAction)
         {
             if (dbAction == null)
             {
-                return new Models.Action();
+                return null;
             }
 
             return new Models.Action { ID = dbAction.ID, Name = dbAction.Name };
@@ -25,17 +38,10 @@ namespace SmartHome.DBModelConverter.Repositories
         {
             if (action == null)
             {
-                return new Entities.Action();
+                return null;
             }
 
-            Entities.Action dbAction = new Entities.Action { Name = action.Name };
-
-            if (action.ID != 0)
-            {
-                dbAction.ID = action.ID;
-            }
-
-            return dbAction;
+            return new Entities.Action { ID = action.ID, Name = action.Name };
         }
     }
 }

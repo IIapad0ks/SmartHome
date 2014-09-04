@@ -10,18 +10,54 @@ using Entities = SmartHome.Core.Entities;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public class TriggerRepository : DBModelNameRepository<Models.Trigger, Entities.Trigger>, ITriggerRepository
+    public class TriggerRepository : DBModelDeviceRepository<Models.Trigger, Entities.Trigger>, ITriggerRepository
     {
         public TriggerRepository(ISHRepository<Entities.Trigger> repository)
         {
             this.repository = repository;
         }
 
+        public override Models.Trigger Add(Models.Trigger item)
+        {
+            IDeviceRepository deviceRepository = SIManager.Container.GetInstance<IDeviceRepository>();
+            ISensorRepository sensorRepository = SIManager.Container.GetInstance<ISensorRepository>();
+
+            if (item.Device.ID == default(int))
+            {
+                item.Device = deviceRepository.Add(item.Device);
+            }
+
+            if (item.Sensor.ID == default(int))
+            {
+                item.Sensor = sensorRepository.Add(item.Sensor);
+            }
+
+            return base.Add(item);
+        }
+
+        public override bool Update(Models.Trigger item)
+        {
+            IDeviceRepository deviceRepository = SIManager.Container.GetInstance<IDeviceRepository>();
+            ISensorRepository sensorRepository = SIManager.Container.GetInstance<ISensorRepository>();
+
+            if (item.Device.ID != default(int))
+            {
+                deviceRepository.Update(item.Device);
+            }
+
+            if (item.Sensor.ID != default(int))
+            {
+                sensorRepository.Update(item.Sensor);
+            }
+
+            return base.Update(item);
+        }
+
         public override Models.Trigger DBItemToItem(Entities.Trigger dbItem)
         {
             if (dbItem == null)
             {
-                return new Models.Trigger();
+                return null;
             }
 
             return new Models.Trigger
@@ -39,22 +75,18 @@ namespace SmartHome.DBModelConverter.Repositories
         {
             if (item == null)
             {
-                return new Entities.Trigger();
+                return null;
             }
 
             Entities.Trigger dbItem = new Entities.Trigger
             {
+                ID = item.ID,
                 Name = item.Name,
                 DeviceTypeID = item.Type.ID,
                 DeviceID = item.Device.ID,
                 SensorID = item.Sensor.ID,
                 Condition = item.Condition
             };
-
-            if (item.ID != 0)
-            {
-                dbItem.ID = item.ID;
-            }
 
             return dbItem;
         }

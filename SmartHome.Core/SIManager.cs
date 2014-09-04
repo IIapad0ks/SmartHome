@@ -14,32 +14,12 @@ namespace SmartHome.Core
 
         static SIManager()
         {
-            Container = new Container();
+            Clear();
         }
 
-        public static void AddAssembly(Assembly assembly) {
-            var registrations =
-                from type in assembly.GetExportedTypes()
-                where type.GetInterfaces().Any()
-                select new
-                {
-                    Service = type.GetInterfaces().Single(),
-                    Implementation = type
-                };
-
-            foreach (var reg in registrations)
-            {
-                if (reg.Implementation.IsAbstract) continue;
-
-                if (reg.Service.IsGenericType)
-                {
-                    Container.RegisterOpenGeneric(reg.Service, reg.Implementation);
-                }
-                else
-                {
-                    Container.Register(reg.Service, reg.Implementation);
-                }
-            }
+        public static void Clear()
+        {
+            Container = new Container();
         }
     }
 }

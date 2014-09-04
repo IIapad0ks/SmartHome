@@ -31,5 +31,6 @@ namespace SmartHome.Core.Entities
         public DbSet<EventLog> EventLogs { get; set; }
         public DbSet<Sensor> Sensors { get; set; }
         public DbSet<Trigger> Triggers { get; set; }
+        public DbSet<SHConfig> SHConfigs { get; set; }
     }
 }

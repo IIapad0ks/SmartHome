@@ -16,11 +16,31 @@ namespace SmartHome.DBModelConverter.Repositories
             this.repository = repository;
         }
 
+        public override Models.EventLog Add(Models.EventLog item)
+        {
+            if (item.Action.ID == default(int))
+            {
+                item.Action = SIManager.Container.GetInstance<IActionRepository>().Add(item.Action);
+            }
+
+            return base.Add(item);
+        }
+
+        public override bool Update(Models.EventLog item)
+        {
+            if (item.Action.ID != default(int))
+            {
+                SIManager.Container.GetInstance<IActionRepository>().Update(item.Action);
+            }
+
+            return base.Update(item);
+        }
+
         public override Models.EventLog DBItemToItem(Entities.EventLog dbEventLog)
         {
             if (dbEventLog == null)
             {
-                return new Models.EventLog();
+                return null;
             }
 
             return new Models.EventLog 
@@ -36,12 +56,12 @@ namespace SmartHome.DBModelConverter.Repositories
 
         public override Entities.EventLog ItemToDBItem(Models.EventLog eventLog)
         {
-            Entities.EventLog dbEventLog = new Entities.EventLog { ActionID = eventLog.Action.ID, ConfigID = eventLog.Device.ID, DeviceState = eventLog.DeviceState, EventDatetime = eventLog.EventDatetime };
-
-            if (eventLog.ID != 0)
+            if (eventLog == null)
             {
-                dbEventLog.ID = eventLog.ID;
+                return null;
             }
+
+            Entities.EventLog dbEventLog = new Entities.EventLog { ID = eventLog.ID, ActionID = eventLog.Action.ID, ConfigID = eventLog.Device.ID, DeviceState = eventLog.DeviceState, EventDatetime = eventLog.EventDatetime };
 
             return dbEventLog;
         }

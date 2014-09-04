@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Core.SmartHome
 {
+    public enum SHCommamd { Start = 129, Stop, Restart };
+
     public interface ISmartHomeHandler
     {
         bool IsOn { get; }

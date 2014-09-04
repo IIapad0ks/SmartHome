@@ -98,6 +98,9 @@
     <Compile Include="Entities\Sensor.cs">
       <DependentUpon>SmartHomeDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\SHConfig.cs">
+      <DependentUpon>SmartHomeDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\SmartHomeDB.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -127,6 +130,7 @@
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\INameModel.cs" />
     <Compile Include="Models\Sensor.cs" />
+    <Compile Include="Models\SHConfig.cs" />
     <Compile Include="Models\Trigger.cs" />
     <Compile Include="Repositories\IActionRepository.cs" />
     <Compile Include="Repositories\IDBModelRepository.cs" />
@@ -135,6 +139,7 @@
     <Compile Include="Repositories\IDBModelNameRepository.cs" />
     <Compile Include="Repositories\IEventLogRepository.cs" />
     <Compile Include="Repositories\ISensorRepository.cs" />
+    <Compile Include="Repositories\ISHConfigRepository.cs" />
     <Compile Include="Repositories\ITriggerRepository.cs" />
     <Compile Include="SIManager.cs" />
     <Compile Include="SmartHome\IConfig.cs" />

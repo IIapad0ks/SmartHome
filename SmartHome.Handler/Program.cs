@@ -1,15 +1,6 @@
 ﻿using System;
-using SmartHome.Core.Service;
-using SmartHome.Core.Entities;
-using SmartHome.Core.Repositories;
 using SmartHome.Core.SmartHome;
-using SmartHome.DBModelConverter.Repositories;
-using SmartHome.Data.Repositories;
-using SmartHome.Core;
-using System.Data.Entity;
-using SimpleInjector;
-using SimpleInjector.Extensions;
-using SmartHome.Service;
+using System.ServiceProcess;
 
 namespace SmartHome.Handler
 {
@@ -17,20 +8,17 @@ namespace SmartHome.Handler
     {
         static void Main(string[] args)
         {
-            string configFilename = @"E:\Bohdan\dotnet_workspace\SmartHome\SmartHome.Service\bin\SmartHome.xml";
-            string libDirectory = @"E:\Bohdan\dotnet_workspace\SmartHome\SmartHome.Service\bin\libs\";
+            ServiceController sc = new ServiceController("SHService");
+            if (sc.Status == ServiceControllerStatus.Stopped)
+            {
+                sc.Start();
+            }
+            Console.WriteLine("Wait for running service...");
+            sc.WaitForStatus(ServiceControllerStatus.Running);
+            Console.WriteLine("SHService run.");
 
             try
             {
-                SIManager.Container.Register<ISmartHomeHandler>(() => new SmartHomeHandler(configFilename, libDirectory));
-                SIManager.Container.Register<DbContext, SmartHomeDBEntities>();
-                SIManager.Container.RegisterOpenGeneric(typeof(ISHRepository<>), typeof(SmartHomeRepository<>));
-                SIManager.AddAssembly(typeof(EventLogRepository).Assembly);
-                SIManager.Container.Register<ISaveEventsManager, SaveEventsManager>();
-                SIManager.Container.Verify();
-
-                SmartHomeServiceReference.SmartHomeServiceClient client = new SmartHomeServiceReference.SmartHomeServiceClient();
-
                 do
                 {
                     string command = Console.ReadLine().ToLower();
@@ -38,59 +26,27 @@ namespace SmartHome.Handler
                     {
                         case "on":
                             Console.WriteLine("Starting...");
-                            if (client.Start())
-                            {
-                                Console.WriteLine("SH is started.");
-                            }
-                            else
-                            {
-                                Console.WriteLine("SH start error!");
-                            }
+                            sc.ExecuteCommand((int)SHCommamd.Start);
+                            Console.WriteLine("SmartHome is started.");
                             break;
                         case "off":
                             Console.WriteLine("Stopping...");
-                            if (client.Stop())
-                            {
-                                Console.WriteLine("SH is stopped");
-                            }
-                            else
-                            {
-                                Console.WriteLine("SH stop error!");
-                            }
+                            sc.ExecuteCommand((int)SHCommamd.Stop);
+                            Console.WriteLine("SmartHome is stopped.");
                             break;
                         case "restart":
                             Console.WriteLine("Restarting...");
-                            if (client.Restart())
-                            {
-                                Console.WriteLine("SH is restarted.");
-                            }
-                            else
-                            {
-                                Console.WriteLine("SH restart error!");
-                            }
+                            sc.ExecuteCommand((int)SHCommamd.Restart);
+                            Console.WriteLine("SmartHome is restarted.");
                             break;
-                        case "isOn":
-                            Console.WriteLine("SH is {0}", client.IsOn() ? "on" : "off");
+                            /*
+                        case "ison":
+                            bool isOn = SIManager.Container.GetInstance<ISHConfigRepository>().Get(1).IsOn;
+                            Console.WriteLine("SH is {0}", isOn ? "on" : "off");
                             break;
+                             * */
                         case "exit":
-                            char ch;
-                            Console.WriteLine("Exit...");
-                            if (!client.Stop())
-                            {
-                                Console.WriteLine("SH stop error! Exit? y/n");
-                                ch = Console.ReadLine().ToLower()[0];
-                            }
-                            else
-                            {
-                                return;
-                            }
-
-                            if (ch == 'y')
-                            {
-                                return;
-                            }
-
-                            break;
+                            return;
                         default:
                             Console.WriteLine("I don't understand you :'(");
                             break;
@@ -104,6 +60,10 @@ namespace SmartHome.Handler
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
                 Console.ReadLine();
+            }
+            finally
+            {
+                sc.Stop();
             }
         }
     }

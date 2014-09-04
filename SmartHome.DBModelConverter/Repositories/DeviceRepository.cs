@@ -9,18 +9,38 @@ using Entities = SmartHome.Core.Entities;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public class DeviceRepository : DBModelNameRepository<Models.Device, Entities.Device>, IDeviceRepository
+    public class DeviceRepository : DBModelDeviceRepository<Models.Device, Entities.Device>, IDeviceRepository
     {
         public DeviceRepository(ISHRepository<Entities.Device> repository)
         {
             this.repository = repository;
         }
 
+        public override bool Remove(int id)
+        {
+            IEventLogRepository eventsLogRepository = SIManager.Container.GetInstance<IEventLogRepository>();
+            ITriggerRepository triggerRepository = SIManager.Container.GetInstance<ITriggerRepository>();
+
+            IQueryable<Models.Trigger> triggers = SIManager.Container.GetInstance<ITriggerRepository>().GetAll().Where(t => t.Device.ID == id);
+            foreach (var trigger in triggers)
+            {
+                IQueryable<Models.EventLog> events = eventsLogRepository.GetAll().Where(e => e.Device.ID == trigger.ID && e.Type.ID == trigger.Type.ID);
+                foreach (var eventLog in events)
+                {
+                    eventsLogRepository.Remove(eventLog.ID);
+                }
+
+                triggerRepository.Remove(trigger.ID);
+            }
+
+            return base.Remove(id);
+        }
+
         public override Models.Device DBItemToItem(Entities.Device dbDevice)
         {
             if (dbDevice == null)
             {
-                return new Models.Device();
+                return null;
             }
 
             return new Models.Device { ID = dbDevice.ID, Name = dbDevice.Name, Type = SIManager.Container.GetInstance<IDeviceTypeRepository>().Get(dbDevice.DeviceTypeID) };
@@ -30,17 +50,10 @@ namespace SmartHome.DBModelConverter.Repositories
         {
             if (device == null)
             {
-                return new Entities.Device();
+                return null;
             }
 
-            Entities.Device dbDevice = new Entities.Device { Name = device.Name, DeviceTypeID = device.Type.ID };
-
-            if (device.ID != 0)
-            {
-                dbDevice.ID = device.ID;
-            }
-
-            return dbDevice;
+            return new Entities.Device { ID = device.ID, Name = device.Name, DeviceTypeID = device.Type.ID };
         }
     }
 }

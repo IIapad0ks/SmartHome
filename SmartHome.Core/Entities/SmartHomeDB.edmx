@@ -47,6 +47,15 @@
           <Property Name="Name" Type="varchar(max)" Nullable="false" />
           <Property Name="DeviceTypeID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="SHConfig">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ConfigFilename" Type="varchar(max)" Nullable="false" />
+          <Property Name="LibDirectory" Type="varchar(max)" Nullable="false" />
+          <Property Name="IsOn" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="Trigger">
           <Key>
             <PropertyRef Name="ID" />
@@ -160,6 +169,7 @@
           <EntitySet Name="DeviceType" EntityType="Self.DeviceType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EventLog" EntityType="Self.EventLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sensor" EntityType="Self.Sensor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SHConfig" EntityType="Self.SHConfig" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Trigger" EntityType="Self.Trigger" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Device_To_DeviceType" Association="Self.FK_Device_To_DeviceType">
             <End Role="DeviceType" EntitySet="DeviceType" />
@@ -408,6 +418,7 @@
             <End Role="DeviceType" EntitySet="DeviceTypes" />
             <End Role="EventLog" EntitySet="EventLogs" />
           </AssociationSet>
+          <EntitySet Name="SHConfigs" EntityType="SmartHomeDBModel.SHConfig" />
         </EntityContainer>
         <Association Name="FK_EventLog_To_DeviceType">
           <End Type="SmartHomeDBModel.DeviceType" Role="DeviceType" Multiplicity="1" />
@@ -421,6 +432,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="SHConfig">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ConfigFilename" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="LibDirectory" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="IsOn" Type="Boolean" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -483,6 +503,16 @@
                 <ScalarProperty Name="SensorID" ColumnName="SensorID" />
                 <ScalarProperty Name="Condition" ColumnName="Condition" />
                 <ScalarProperty Name="DeviceTypeID" ColumnName="DeviceTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SHConfigs">
+            <EntityTypeMapping TypeName="SmartHomeDBModel.SHConfig">
+              <MappingFragment StoreEntitySet="SHConfig">
+                <ScalarProperty Name="IsOn" ColumnName="IsOn" />
+                <ScalarProperty Name="LibDirectory" ColumnName="LibDirectory" />
+                <ScalarProperty Name="ConfigFilename" ColumnName="ConfigFilename" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
