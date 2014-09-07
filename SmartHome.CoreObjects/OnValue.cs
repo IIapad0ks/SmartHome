@@ -16,7 +16,6 @@ namespace SmartHome.CoreObjects
     {
         public int ID { get; set; }
         public int TypeID { get; set; }
-        public SerializableDictionary<string, string> Properties { get; set; }
         public string Condition { get; set; }
         public string Name { get; set; }
 
@@ -63,7 +62,6 @@ namespace SmartHome.CoreObjects
             this.Name = trigger.Name;
             this.Condition = trigger.Condition;
             this.Controller = trigger.Controller;
-            this.Properties = trigger.Properties;
         }
 
         public System.Xml.Schema.XmlSchema GetSchema()

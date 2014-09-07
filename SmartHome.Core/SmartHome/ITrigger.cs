@@ -8,7 +8,6 @@ namespace SmartHome.Core.SmartHome
 {
     public interface ITrigger : IConfig
     {
-        SerializableDictionary<string, string> Properties { get; set; }
         IController Controller { get; set; }
         string Condition { get; set;  }
 
