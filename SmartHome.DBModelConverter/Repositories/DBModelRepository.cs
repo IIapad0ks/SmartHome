@@ -50,5 +50,15 @@ namespace SmartHome.DBModelConverter.Repositories
 
         public abstract T DBItemToItem(TEntity dbItem);
         public abstract TEntity ItemToDBItem(T item);
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        private void Dispose(bool isDispose)
+        {
+            repository.Dispose();
+        }
     }
 }

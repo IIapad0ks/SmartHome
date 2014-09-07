@@ -9,6 +9,7 @@ using SmartHome.Data.Repositories;
 using SmartHome.Core.Repositories;
 using SmartHome.DBModelConverter.Repositories;
 using SimpleInjector.Extensions;
+using SimpleInjector;
 
 namespace SmartHome.SHService
 {
@@ -23,21 +24,7 @@ namespace SmartHome.SHService
 
         protected override void OnStart(string[] args)
         {
-            SIManager.Container.Register<ISaveEventsManager, SaveEventsManager>();
-            SIManager.Container.Register<ISmartHomeHandler, SmartHomeHandler>();
-            SIManager.Container.Register<DbContext, SmartHomeDBEntities>();
-            SIManager.Container.RegisterOpenGeneric(typeof(ISHRepository<>), typeof(SmartHomeRepository<>));
-
-            SIManager.Container.Register<IActionRepository, ActionRepository>();
-            SIManager.Container.Register<IDeviceRepository, DeviceRepository>();
-            SIManager.Container.Register<IDeviceTypeRepository, DeviceTypeRepository>();
-            SIManager.Container.Register<ISensorRepository, SensorRepository>();
-            SIManager.Container.Register<ITriggerRepository, TriggerRepository>();
-            SIManager.Container.Register<IEventLogRepository, EventLogRepository>();
-            SIManager.Container.Register<ISHConfigRepository, SHConfigRepository>();
-
-            SIManager.Container.Verify();
-
+            this.InitializeContainer(SIManager.Container);
             this.shHandler = SIManager.Container.GetInstance<ISmartHomeHandler>();
         }
 
@@ -69,6 +56,24 @@ namespace SmartHome.SHService
                     this.shHandler.Restart();
                     break;
             }
+        }
+
+        private void InitializeContainer(Container container)
+        {
+            container.Register<ISaveEventsManager, SaveEventsManager>();
+            container.Register<ISmartHomeHandler, SmartHomeHandler>();
+            container.Register<DbContext, SmartHomeDBEntities>();
+            container.RegisterOpenGeneric(typeof(ISHRepository<>), typeof(SmartHomeRepository<>));
+
+            container.Register<IActionRepository, ActionRepository>();
+            container.Register<IDeviceRepository, DeviceRepository>();
+            container.Register<IDeviceTypeRepository, DeviceTypeRepository>();
+            container.Register<ISensorRepository, SensorRepository>();
+            container.Register<ITriggerRepository, TriggerRepository>();
+            container.Register<IEventLogRepository, EventLogRepository>();
+            container.Register<ISHConfigRepository, SHConfigRepository>();
+
+            container.Verify();
         }
     }
 }

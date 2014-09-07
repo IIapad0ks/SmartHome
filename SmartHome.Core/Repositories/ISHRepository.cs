@@ -8,7 +8,7 @@ using SmartHome.Core.Models;
 
 namespace SmartHome.Core.Repositories
 {
-    public interface ISHRepository<T> where T : class, IEntity
+    public interface ISHRepository<T> : IDisposable where T : class, IEntity
     {
         IQueryable<T> GetAll();
         T Get(int id);

@@ -9,16 +9,17 @@ namespace SmartHome.Handler
         static void Main(string[] args)
         {
             ServiceController sc = new ServiceController("SHService");
-            if (sc.Status == ServiceControllerStatus.Stopped)
-            {
-                sc.Start();
-            }
-            Console.WriteLine("Wait for running service...");
-            sc.WaitForStatus(ServiceControllerStatus.Running);
-            Console.WriteLine("SHService run.");
 
             try
             {
+                if (sc.Status == ServiceControllerStatus.Stopped)
+                {
+                    sc.Start();
+                }
+                Console.WriteLine("Wait for running service...");
+                sc.WaitForStatus(ServiceControllerStatus.Running);
+                Console.WriteLine("SHService run.");
+
                 do
                 {
                     string command = Console.ReadLine().ToLower();

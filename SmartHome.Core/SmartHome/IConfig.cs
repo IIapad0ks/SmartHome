@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace SmartHome.Core.SmartHome
 {
-    public interface IConfig
+    public interface IConfig : IXmlSerializable
     {
         int ID { get; set; }
         int TypeID { get; set; }
@@ -14,8 +15,5 @@ namespace SmartHome.Core.SmartHome
         //bool IsActive { get; set; }
 
         event EventHandler<SaveEventsManagerArgs> onEvent;
-
-        string WriteXml();
-        void ReadXml(string xml);
     }
 }

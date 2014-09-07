@@ -141,6 +141,7 @@
     <Compile Include="Repositories\ISensorRepository.cs" />
     <Compile Include="Repositories\ISHConfigRepository.cs" />
     <Compile Include="Repositories\ITriggerRepository.cs" />
+    <Compile Include="SmartHome\SerializableDictionary.cs" />
     <Compile Include="SIManager.cs" />
     <Compile Include="SmartHome\IConfig.cs" />
     <Compile Include="SmartHome\IController.cs" />

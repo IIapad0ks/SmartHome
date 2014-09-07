@@ -1,9 +1,10 @@
 ﻿using SmartHome.Core.Models;
+using System;
 using System.Linq;
 
 namespace SmartHome.Core.Repositories
 {
-    public interface IDBModelRepository<T> where T : class, IModel
+    public interface IDBModelRepository<T> : IDisposable where T : class, IModel
     {
         IQueryable<T> GetAll();
         T Get(int id);

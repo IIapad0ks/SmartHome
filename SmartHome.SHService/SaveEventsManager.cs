@@ -9,7 +9,9 @@ namespace SmartHome.Service
 {
     public class SaveEventsManager : ISaveEventsManager
     {
-        IEventLogRepository repository;
+        private IEventLogRepository repository;
+        private object lockEvents = new object();
+
         public List<EventLog> Events { get; private set; }
 
         public SaveEventsManager(IEventLogRepository repository)
@@ -20,18 +22,26 @@ namespace SmartHome.Service
 
         public void AddEvent(IConfig config, string actionName)
         {
-            this.Events.Add(new EventLog
+            lock (this.lockEvents)
             {
-                Type = new DeviceType { ID = config.TypeID },
-                Device = new Device { ID = config.ID },
-                DeviceState = config.WriteXml(),
-                Action = new SmartHome.Core.Models.Action { Name = actionName }
-            });
+                this.Events.Add(new EventLog
+                {
+                    Type = new DeviceType { ID = config.TypeID },
+                    Device = new Device { ID = config.ID },
+                    DeviceState = config.WriteXml(),
+                    Action = new SmartHome.Core.Models.Action { Name = actionName },
+                    EventDatetime = DateTime.Now
+                });
+            }
         }
 
         public void SaveEvents()
         {
-            repository.Add(this.Events.AsQueryable());
+            lock (lockEvents)
+            {
+                repository.Add(this.Events.AsQueryable());
+                this.Events.Clear();
+            }
         }
     }
 }

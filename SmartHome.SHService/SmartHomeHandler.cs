@@ -38,7 +38,11 @@ namespace SmartHome.Service
 
         public SmartHomeHandler(ISaveEventsManager saveEventsManager)
         {
-            SHConfig shConfig = SIManager.Container.GetInstance<ISHConfigRepository>().Get(1);
+            SHConfig shConfig;
+            using (var configRepository = SIManager.Container.GetInstance<ISHConfigRepository>())
+            {
+                shConfig = configRepository.Get(3);
+            }
             this.configFilename = shConfig.ConfigFilename;
             this.libDirname = shConfig.LibDirname;
 
@@ -241,14 +245,20 @@ namespace SmartHome.Service
                     {
                         case "controller":
                             this.CheckConfigName<IController>(config.Name, this.Controllers, elemName);
+
                             IController controller = (IController)config;
-                            controller.ID = SIManager.Container.GetInstance<IDeviceRepository>().Add(new Device { Name = controller.Name, Type = new DeviceType { Name = currentType.FullName } }).ID;
+                            Device newDevice = SIManager.Container.GetInstance<IDeviceRepository>().Add(new Device { Name = controller.Name, Type = new DeviceType { Name = currentType.FullName } });
+                            controller.ID = newDevice.ID;
+                            controller.TypeID = newDevice.Type.ID;
                             this.Controllers.Add(controller);
                             break;
                         case "sensor":
                             this.CheckConfigName<ISensor>(config.Name, this.Sensors, elemName);
+
                             ISensor sensor = (ISensor)config;
-                            sensor.ID = SIManager.Container.GetInstance<ISensorRepository>().Add(new Sensor { Name = sensor.Name, Type = new DeviceType { Name = currentType.FullName } }).ID;
+                            Sensor newSensor = SIManager.Container.GetInstance<ISensorRepository>().Add(new Sensor { Name = sensor.Name, Type = new DeviceType { Name = currentType.FullName } });
+                            sensor.ID = newSensor.ID;
+                            sensor.TypeID = newSensor.Type.ID;
                             this.Sensors.Add(sensor);
                             break;
                         case "trigger":
@@ -278,7 +288,7 @@ namespace SmartHome.Service
 
                             trigger.Condition = elem.Attribute("condition").Value;
 
-                            Dictionary<string, string> elemParams = new Dictionary<string, string>();
+                            SerializableDictionary<string, string> elemParams = new SerializableDictionary<string, string>();
                             foreach (XElement child in elem.Elements())
                             {
                                 string key = child.Name.ToString();
@@ -313,15 +323,16 @@ namespace SmartHome.Service
                             ISensor triggerSensor = searchSensorResult.First();
                             triggerSensor.onChange += trigger.Invoke;
 
-                            trigger.ID = SIManager.Container.GetInstance<ITriggerRepository>().Add(new Trigger 
+                            Trigger newTrigger = SIManager.Container.GetInstance<ITriggerRepository>().Add(new Trigger 
                             { 
                                 Name = trigger.Name, 
                                 Type = new DeviceType { Name = currentType.FullName }, 
                                 Device = new Device { ID = trigger.Controller.ID }, 
                                 Sensor = new Sensor { ID = triggerSensor.ID }, 
                                 Condition = trigger.Condition 
-                            }).ID;
-
+                            });
+                            trigger.ID = newTrigger.ID;
+                            trigger.TypeID = newTrigger.Type.ID;
                             this.Triggers.Add(trigger);
                             break;
                         default:

@@ -67,5 +67,15 @@ namespace SmartHome.Data.Repositories
 
             return false;
         }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        private void Dispose(bool isDispose)
+        {
+            this.db.Dispose();
+        }
     }
 }

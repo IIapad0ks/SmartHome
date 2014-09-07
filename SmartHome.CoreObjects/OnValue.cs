@@ -16,10 +16,12 @@ namespace SmartHome.CoreObjects
     {
         public int ID { get; set; }
         public int TypeID { get; set; }
-        public Dictionary<string, string> Properties { get; set; }
-        public IController Controller { get; set; }
+        public SerializableDictionary<string, string> Properties { get; set; }
         public string Condition { get; set; }
         public string Name { get; set; }
+
+        [XmlIgnore()]
+        public IController Controller { get; set; }
 
         public event EventHandler<SaveEventsManagerArgs> onEvent;
 
@@ -62,6 +64,21 @@ namespace SmartHome.CoreObjects
             this.Condition = trigger.Condition;
             this.Controller = trigger.Controller;
             this.Properties = trigger.Properties;
+        }
+
+        public System.Xml.Schema.XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(System.Xml.XmlReader reader)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer)
+        {
+            throw new NotImplementedException();
         }
     }
 }
