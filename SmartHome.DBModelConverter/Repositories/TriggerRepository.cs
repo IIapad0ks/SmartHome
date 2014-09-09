@@ -10,14 +10,14 @@ using Entities = SmartHome.Core.Entities;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public class TriggerRepository : DBModelDeviceRepository<Models.Trigger, Entities.Trigger>, ITriggerRepository
+    public class TriggerRepository : DBModelDeviceRepository<Models.TriggerModel, Entities.Trigger>, ITriggerRepository
     {
         public TriggerRepository(ISHRepository<Entities.Trigger> repository)
         {
             this.repository = repository;
         }
 
-        public override Models.Trigger Add(Models.Trigger item)
+        public override Models.TriggerModel Add(Models.TriggerModel item)
         {
             IDeviceRepository deviceRepository = SIManager.Container.GetInstance<IDeviceRepository>();
             ISensorRepository sensorRepository = SIManager.Container.GetInstance<ISensorRepository>();
@@ -35,7 +35,7 @@ namespace SmartHome.DBModelConverter.Repositories
             return base.Add(item);
         }
 
-        public override bool Update(Models.Trigger item)
+        public override bool Update(Models.TriggerModel item)
         {
             IDeviceRepository deviceRepository = SIManager.Container.GetInstance<IDeviceRepository>();
             ISensorRepository sensorRepository = SIManager.Container.GetInstance<ISensorRepository>();
@@ -53,14 +53,14 @@ namespace SmartHome.DBModelConverter.Repositories
             return base.Update(item);
         }
 
-        public override Models.Trigger DBItemToItem(Entities.Trigger dbItem)
+        public override Models.TriggerModel DBItemToItem(Entities.Trigger dbItem)
         {
             if (dbItem == null)
             {
                 return null;
             }
 
-            return new Models.Trigger
+            return new Models.TriggerModel
             {
                 ID = dbItem.ID,
                 Name = dbItem.Name,
@@ -71,7 +71,7 @@ namespace SmartHome.DBModelConverter.Repositories
             };
         }
 
-        public override Entities.Trigger ItemToDBItem(Models.Trigger item)
+        public override Entities.Trigger ItemToDBItem(Models.TriggerModel item)
         {
             if (item == null)
             {

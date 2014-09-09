@@ -6,23 +6,25 @@ using System.Reflection;
 using System.IO;
 using System.Xml;
 using System.Threading;
-using SmartHome.Core;
 using SmartHome.Core.SmartHome;
 using SmartHome.Core.Exceptions;
 using SmartHome.Core.Models;
-using SmartHome.Core.Repositories;
+using SmartHome.Core.Service;
 
 namespace SmartHome.Service
 {
     public class SmartHomeHandler : ISmartHomeHandler, IDisposable
     {
+        private int id;
         private string configFilename;
         private string libDirname;
         private string[] allowInterfaces = new string[] { "IController", "ISensor", "ITrigger" };
         private bool isOn = false;
         private int saveEventPeriod = 60000;
         private Timer saveEventTimer;
+
         private ISaveEventsManager eventsManager;
+        private IWebAPIManager webAPIManager;
 
         public bool IsOn
         {
@@ -36,21 +38,19 @@ namespace SmartHome.Service
         public List<ISensor> Sensors { get; set; }
         public List<ITrigger> Triggers { get; set; }
 
-        public SmartHomeHandler(ISaveEventsManager saveEventsManager)
+        public SmartHomeHandler(ISaveEventsManager saveEventsManager, IWebAPIManager webAPIManager)
         {
-            SHConfig shConfig;
-            using (var configRepository = SIManager.Container.GetInstance<ISHConfigRepository>())
-            {
-                shConfig = configRepository.Get(3);
-            }
+            this.eventsManager = saveEventsManager;
+            this.webAPIManager = webAPIManager;
+
+            this.id = 1; //1 - IIapadoks SmartHomeService
+            SHServiceModel shConfig = webAPIManager.Get<SHServiceModel>(this.id); 
             this.configFilename = shConfig.ConfigFilename;
             this.libDirname = shConfig.LibDirname;
 
             this.Controllers = new List<IController>();
             this.Sensors = new List<ISensor>();
             this.Triggers = new List<ITrigger>();
-
-            this.eventsManager = saveEventsManager;
         }
 
         public bool Start()
@@ -79,7 +79,7 @@ namespace SmartHome.Service
                 foreach (ISensor sensor in this.Sensors)
                 {
                     sensor.TimerPeriod = 1000; //1 second
-                    sensor.StartAsync();
+                    sensor.Start();
                 }
 
                 this.saveEventTimer = new Timer((object state) =>
@@ -88,6 +88,7 @@ namespace SmartHome.Service
                 }, null, this.saveEventPeriod, this.saveEventPeriod);
 
                 this.isOn = true;
+                this.UpdateState();
                 Console.WriteLine("SmartHome is started.");
 
                 return true;
@@ -114,7 +115,7 @@ namespace SmartHome.Service
             }
 
             return false;
-        }   
+        }
 
         public bool Stop()
         {
@@ -236,6 +237,7 @@ namespace SmartHome.Service
                     Type currentType = currentTypeSelectResult.First();
                     IConfig config = (IConfig)Activator.CreateInstance(currentType);
                     config.Name = elem.Attribute("name").Value;
+                    config.TypeID = this.webAPIManager.Save<DeviceTypeModel>(new DeviceTypeModel { Name = currentType.FullName }).ID;
                     config.onEvent += (object sender, SaveEventsManagerArgs args) =>
                     {
                         this.eventsManager.AddEvent((IConfig)sender, args.ActionName);
@@ -247,18 +249,14 @@ namespace SmartHome.Service
                             this.CheckConfigName<IController>(config.Name, this.Controllers, elemName);
 
                             IController controller = (IController)config;
-                            Device newDevice = SIManager.Container.GetInstance<IDeviceRepository>().Add(new Device { Name = controller.Name, Type = new DeviceType { Name = currentType.FullName } });
-                            controller.ID = newDevice.ID;
-                            controller.TypeID = newDevice.Type.ID;
+                            controller.ID = this.webAPIManager.Save<DeviceModel>(new DeviceModel { Name = controller.Name, Type = new DeviceTypeModel { ID = controller.TypeID } }).ID;
                             this.Controllers.Add(controller);
                             break;
                         case "sensor":
                             this.CheckConfigName<ISensor>(config.Name, this.Sensors, elemName);
 
                             ISensor sensor = (ISensor)config;
-                            Sensor newSensor = SIManager.Container.GetInstance<ISensorRepository>().Add(new Sensor { Name = sensor.Name, Type = new DeviceType { Name = currentType.FullName } });
-                            sensor.ID = newSensor.ID;
-                            sensor.TypeID = newSensor.Type.ID;
+                            sensor.ID = this.webAPIManager.Save<SmartHome.Core.Models.SensorModel>(new SmartHome.Core.Models.SensorModel { Name = sensor.Name, Type = new DeviceTypeModel { ID = sensor.TypeID } }).ID;
                             this.Sensors.Add(sensor);
                             break;
                         case "trigger":
@@ -288,24 +286,6 @@ namespace SmartHome.Service
 
                             trigger.Condition = elem.Attribute("condition").Value;
 
-                            SerializableDictionary<string, string> elemParams = new SerializableDictionary<string, string>();
-                            foreach (XElement child in elem.Elements())
-                            {
-                                string key = child.Name.ToString();
-                                if (child.Attribute("value") == null)
-                                {
-                                    throw new SmartHomeConfigException(String.Format("Your {0} parameter {1} don't have attribute {2}! {3}", elemName, key, "value", elem.ToString()));
-                                }
-
-                                if (elemParams.Any(p => p.Key == key))
-                                {
-                                    throw new SmartHomeConfigException(String.Format("Your {0} have more than one parameter {1}! {2}", elemName, key, elem.ToString()));
-                                }
-
-                                elemParams.Add(key, child.Attribute("value").Value);
-                            }
-                            trigger.Properties = elemParams;
-
                             if (elem.Attribute("sensor") == null)
                             {
                                 throw new SmartHomeConfigException(String.Format("Your {0} don't have attribute {1}! {2}", elemName, "sensor", elem.ToString()));
@@ -323,16 +303,7 @@ namespace SmartHome.Service
                             ISensor triggerSensor = searchSensorResult.First();
                             triggerSensor.onChange += trigger.Invoke;
 
-                            Trigger newTrigger = SIManager.Container.GetInstance<ITriggerRepository>().Add(new Trigger 
-                            { 
-                                Name = trigger.Name, 
-                                Type = new DeviceType { Name = currentType.FullName }, 
-                                Device = new Device { ID = trigger.Controller.ID }, 
-                                Sensor = new Sensor { ID = triggerSensor.ID }, 
-                                Condition = trigger.Condition 
-                            });
-                            trigger.ID = newTrigger.ID;
-                            trigger.TypeID = newTrigger.Type.ID;
+                            trigger.ID = this.webAPIManager.Save<SmartHome.Core.Models.TriggerModel>(new SmartHome.Core.Models.TriggerModel { Name = trigger.Name, Condition = trigger.Condition, Type = new DeviceTypeModel { ID = trigger.TypeID }, Device = new DeviceModel { ID = trigger.Controller.ID }, Sensor = new SmartHome.Core.Models.SensorModel { ID = triggerSensor.ID } }).ID;
                             this.Triggers.Add(trigger);
                             break;
                         default:
@@ -360,6 +331,13 @@ namespace SmartHome.Service
             {
                 throw new SmartHomeConfigException(String.Format("Your config have more than one {1} with name {0}!", configName, configType));
             }
+        }
+
+        private void UpdateState()
+        {
+            SHServiceModel sh = this.webAPIManager.Get<SHServiceModel>(this.id);
+            sh.IsOn = this.IsOn;
+            this.webAPIManager.Update<SHServiceModel>(sh);
         }
 
         public void Dispose()

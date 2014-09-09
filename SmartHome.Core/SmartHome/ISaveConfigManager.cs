@@ -9,7 +9,7 @@ namespace SmartHome.Core.SmartHome
 {
     public interface ISaveEventsManager
     {
-        List<EventLog> Events { get; }
+        List<EventLogModel> Events { get; }
 
         void AddEvent(IConfig config, string actionName);
         void SaveEvents();

@@ -8,6 +8,6 @@ namespace SmartHome.Core.Models
 {
     public interface IDeviceModel : INameModel
     {
-        DeviceType Type { get; set; }
+        DeviceTypeModel Type { get; set; }
     }
 }

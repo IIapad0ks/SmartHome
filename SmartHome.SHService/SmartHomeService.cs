@@ -10,6 +10,7 @@ using SmartHome.Core.Repositories;
 using SmartHome.DBModelConverter.Repositories;
 using SimpleInjector.Extensions;
 using SimpleInjector;
+using SmartHome.Core.Service;
 
 namespace SmartHome.SHService
 {
@@ -60,9 +61,10 @@ namespace SmartHome.SHService
 
         private void InitializeContainer(Container container)
         {
+            container.Register<IWebAPIManager, WebAPIManager>();
             container.Register<ISaveEventsManager, SaveEventsManager>();
             container.Register<ISmartHomeHandler, SmartHomeHandler>();
-            container.Register<DbContext, SmartHomeDBEntities>();
+            container.Register<DbContext, SmartHomeDBContext>();
             container.RegisterOpenGeneric(typeof(ISHRepository<>), typeof(SmartHomeRepository<>));
 
             container.Register<IActionRepository, ActionRepository>();
@@ -71,7 +73,7 @@ namespace SmartHome.SHService
             container.Register<ISensorRepository, SensorRepository>();
             container.Register<ITriggerRepository, TriggerRepository>();
             container.Register<IEventLogRepository, EventLogRepository>();
-            container.Register<ISHConfigRepository, SHConfigRepository>();
+            container.Register<ISHServiceRepository, SHServiceRepository>();
 
             container.Verify();
         }

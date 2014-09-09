@@ -12,7 +12,6 @@ namespace SmartHome.Core.SmartHome
         int ID { get; set; }
         int TypeID { get; set; }
         string Name { get; set; }
-        //bool IsActive { get; set; }
 
         event EventHandler<SaveEventsManagerArgs> onEvent;
     }

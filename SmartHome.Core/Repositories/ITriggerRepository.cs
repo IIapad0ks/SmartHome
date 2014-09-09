@@ -7,5 +7,5 @@ using SmartHome.Core.Models;
 
 namespace SmartHome.Core.Repositories
 {
-    public interface ITriggerRepository : IDBModelNameRepository<Trigger> { }
+    public interface ITriggerRepository : IDBModelNameRepository<TriggerModel> { }
 }

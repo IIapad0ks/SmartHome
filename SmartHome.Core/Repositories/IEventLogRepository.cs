@@ -3,8 +3,8 @@ using System.Linq;
 
 namespace SmartHome.Core.Repositories
 {
-    public interface IEventLogRepository : IDBModelRepository<EventLog> 
+    public interface IEventLogRepository : IDBModelRepository<EventLogModel> 
     {
-        void Add(IQueryable<EventLog> events);
+        void Add(IQueryable<EventLogModel> events);
     }
 }

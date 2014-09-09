@@ -51,7 +51,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -64,10 +67,10 @@
       <HintPath>..\packages\SimpleInjector.2.5.2\lib\net45\SimpleInjector.Diagnostics.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -81,57 +84,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Action.cs">
-      <DependentUpon>SmartHomeDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Device.cs">
-      <DependentUpon>SmartHomeDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\DeviceType.cs">
-      <DependentUpon>SmartHomeDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\EventLog.cs">
-      <DependentUpon>SmartHomeDB.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Entities\EventAction.cs" />
+    <Compile Include="Entities\Device.cs" />
+    <Compile Include="Entities\DeviceType.cs" />
+    <Compile Include="Entities\EventLog.cs" />
+    <Compile Include="Entities\IDeviceEntity.cs" />
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Entities\INameEntity.cs" />
-    <Compile Include="Entities\Sensor.cs">
-      <DependentUpon>SmartHomeDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SHConfig.cs">
-      <DependentUpon>SmartHomeDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SmartHomeDB.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SmartHomeDB.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SmartHomeDB.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SmartHomeDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SmartHomeDB.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SmartHomeDB.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Trigger.cs">
-      <DependentUpon>SmartHomeDB.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Entities\ISmartHomeDBContext.cs" />
+    <Compile Include="Entities\Sensor.cs" />
+    <Compile Include="Entities\SmartHomeDBContext.cs" />
+    <Compile Include="Entities\SmartHomeService.cs" />
+    <Compile Include="Entities\Trigger.cs" />
     <Compile Include="Exceptions\SmartHomeConfigException.cs" />
     <Compile Include="Exceptions\SmartHomeException.cs" />
     <Compile Include="Exceptions\SmartHomePluginException.cs" />
-    <Compile Include="Models\Action.cs" />
-    <Compile Include="Models\Device.cs" />
-    <Compile Include="Models\DeviceType.cs" />
-    <Compile Include="Models\EventLog.cs" />
+    <Compile Include="Models\ActionModel.cs" />
+    <Compile Include="Models\DeviceModel.cs" />
+    <Compile Include="Models\DeviceTypeModel.cs" />
+    <Compile Include="Models\EventLogModel.cs" />
     <Compile Include="Models\IDeviceModel.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\INameModel.cs" />
-    <Compile Include="Models\Sensor.cs" />
-    <Compile Include="Models\SHConfig.cs" />
-    <Compile Include="Models\Trigger.cs" />
+    <Compile Include="Models\SensorModel.cs" />
+    <Compile Include="Models\SHServiceModel.cs" />
+    <Compile Include="Models\TriggerModel.cs" />
     <Compile Include="Repositories\IActionRepository.cs" />
     <Compile Include="Repositories\IDBModelRepository.cs" />
     <Compile Include="Repositories\IDeviceRepository.cs" />
@@ -139,10 +116,12 @@
     <Compile Include="Repositories\IDBModelNameRepository.cs" />
     <Compile Include="Repositories\IEventLogRepository.cs" />
     <Compile Include="Repositories\ISensorRepository.cs" />
-    <Compile Include="Repositories\ISHConfigRepository.cs" />
+    <Compile Include="Repositories\ISHServiceRepository.cs" />
     <Compile Include="Repositories\ITriggerRepository.cs" />
-    <Compile Include="SmartHome\SerializableDictionary.cs" />
+    <Compile Include="Service\WebAPIManager.cs" />
     <Compile Include="SIManager.cs" />
+    <Compile Include="SmartHome\Config.cs" />
+    <Compile Include="SmartHome\Controller.cs" />
     <Compile Include="SmartHome\IConfig.cs" />
     <Compile Include="SmartHome\IController.cs" />
     <Compile Include="SmartHome\ISaveConfigManager.cs" />
@@ -152,28 +131,16 @@
     <Compile Include="Service\ISmartHomeService.cs" />
     <Compile Include="SmartHome\ITrigger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\IWebAPIManager.cs" />
     <Compile Include="SmartHome\SaveEventsManagerArgs.cs" />
+    <Compile Include="SmartHome\Sensor.cs" />
+    <Compile Include="SmartHome\Trigger.cs" />
     <Compile Include="SmartHome\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <EntityDeploy Include="Entities\SmartHomeDB.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>SmartHomeDB.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="Entities\SmartHomeDB.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>SmartHomeDB.edmx</DependentUpon>
-      <LastGenOutput>SmartHomeDB.Context.cs</LastGenOutput>
-    </None>
-    <None Include="Entities\SmartHomeDB.edmx.diagram">
-      <DependentUpon>SmartHomeDB.edmx</DependentUpon>
-    </None>
-    <None Include="Entities\SmartHomeDB.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>SmartHomeDB.edmx</DependentUpon>
-      <LastGenOutput>SmartHomeDB.cs</LastGenOutput>
-    </None>
+    <None Include="CodeTemplates\EFModelFromDatabase\Context.cs.t4" />
+    <None Include="CodeTemplates\EFModelFromDatabase\EntityType.cs.t4" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

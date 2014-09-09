@@ -2,5 +2,5 @@
 
 namespace SmartHome.Core.Repositories
 {
-    public interface ISensorRepository : IDBModelNameRepository<Sensor> { }
+    public interface ISensorRepository : IDBModelNameRepository<SensorModel> { }
 }

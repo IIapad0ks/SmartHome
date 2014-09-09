@@ -9,14 +9,9 @@ using SmartHome.Core.SmartHome;
 
 namespace SmartHome.CoreObjects
 {
-    public class SwitchController : ISwitchController
+    public class SwitchController : Controller, ISwitchController
     {
         private bool isOn;
-
-        public int ID { get; set; }
-        public int TypeID { get; set; }
-
-        public event EventHandler<SaveEventsManagerArgs> onEvent;
 
         public bool IsOn
         {
@@ -33,7 +28,7 @@ namespace SmartHome.CoreObjects
                     Console.WriteLine("{0}({2}): is {1}.", this.GetType().Name, this.isOn ? "on" : "off", this.Name);
                     Console.WriteLine("************************************************************");
 
-                    this.onEvent(this, new SaveEventsManagerArgs(this.isOn ? "turnOn" : "turnOff"));
+                    this.ExecOnEvent(new SaveEventsManagerArgs(this.isOn ? "turnOn" : "turnOff"));
                 }
             }
         }
@@ -48,29 +43,16 @@ namespace SmartHome.CoreObjects
             this.IsOn = false;
         }
 
-        public string Name { get; set; }
-
-        public virtual string WriteXml()
+        public override void ReadXml(System.Xml.XmlReader reader)
         {
-            XmlSerializer serializer = new XmlSerializer(this.GetType());
-            StringWriter writer = new StringWriter();
-            serializer.Serialize(writer, this);
-            return writer.ToString();
+            base.ReadXml(reader);
+            this.isOn = Boolean.Parse(reader["isOn"]);
         }
 
-        public virtual void ReadXml(string xml)
+        public override void WriteXml(System.Xml.XmlWriter writer)
         {
-            XmlSerializer serializer = new XmlSerializer(this.GetType());
-            StringReader reader = new StringReader(xml);
-            ISwitchController switchController = (ISwitchController)serializer.Deserialize(reader);
-
-            this.Name = switchController.Name;
-            this.isOn = switchController.IsOn;
-        }
-
-        protected void initEvent(string actionName)
-        {
-            this.onEvent(this, new SaveEventsManagerArgs(actionName));
+            base.WriteXml(writer);
+            writer.WriteAttributeString("isOn", this.isOn.ToString());
         }
     }
 }

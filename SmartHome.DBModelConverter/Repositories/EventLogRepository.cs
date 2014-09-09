@@ -9,14 +9,14 @@ using Entities = SmartHome.Core.Entities;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public class EventLogRepository : DBModelRepository<Models.EventLog, Entities.EventLog>, IEventLogRepository
+    public class EventLogRepository : DBModelRepository<Models.EventLogModel, Entities.EventLog>, IEventLogRepository
     {
         public EventLogRepository(ISHRepository<Entities.EventLog> repository)
         {
             this.repository = repository;
         }
 
-        public override Models.EventLog Add(Models.EventLog item)
+        public override Models.EventLogModel Add(Models.EventLogModel item)
         {
             if (item.Action.ID == default(int))
             {
@@ -26,7 +26,7 @@ namespace SmartHome.DBModelConverter.Repositories
             return base.Add(item);
         }
 
-        public override bool Update(Models.EventLog item)
+        public override bool Update(Models.EventLogModel item)
         {
             if (item.Action.ID != default(int))
             {
@@ -36,14 +36,14 @@ namespace SmartHome.DBModelConverter.Repositories
             return base.Update(item);
         }
 
-        public override Models.EventLog DBItemToItem(Entities.EventLog dbEventLog)
+        public override Models.EventLogModel DBItemToItem(Entities.EventLog dbEventLog)
         {
             if (dbEventLog == null)
             {
                 return null;
             }
 
-            return new Models.EventLog 
+            return new Models.EventLogModel 
             { 
                 ID = dbEventLog.ID, 
                 Action = SIManager.Container.GetInstance<IActionRepository>().Get(dbEventLog.ActionID), 
@@ -54,7 +54,7 @@ namespace SmartHome.DBModelConverter.Repositories
             };
         }
 
-        public override Entities.EventLog ItemToDBItem(Models.EventLog eventLog)
+        public override Entities.EventLog ItemToDBItem(Models.EventLogModel eventLog)
         {
             if (eventLog == null)
             {
@@ -78,7 +78,7 @@ namespace SmartHome.DBModelConverter.Repositories
             return device;
         }
 
-        public void Add(IQueryable<Models.EventLog> events)
+        public void Add(IQueryable<Models.EventLogModel> events)
         {
             foreach (var e in events)
             {

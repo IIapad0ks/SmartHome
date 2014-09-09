@@ -1,6 +1,10 @@
 ﻿using System;
 using SmartHome.Core.SmartHome;
 using System.ServiceProcess;
+using SmartHome.Core.Service;
+using SmartHome.Core.Models;
+using SmartHome.Core;
+using SimpleInjector;
 
 namespace SmartHome.Handler
 {
@@ -8,18 +12,12 @@ namespace SmartHome.Handler
     {
         static void Main(string[] args)
         {
-            ServiceController sc = new ServiceController("SHService");
+            InitIOCContainer(SIManager.Container);
+            IWebAPIManager webAPIManager = SIManager.Container.GetInstance<IWebAPIManager>();
+            int shID = 1;
 
             try
             {
-                if (sc.Status == ServiceControllerStatus.Stopped)
-                {
-                    sc.Start();
-                }
-                Console.WriteLine("Wait for running service...");
-                sc.WaitForStatus(ServiceControllerStatus.Running);
-                Console.WriteLine("SHService run.");
-
                 do
                 {
                     string command = Console.ReadLine().ToLower();
@@ -27,25 +25,23 @@ namespace SmartHome.Handler
                     {
                         case "on":
                             Console.WriteLine("Starting...");
-                            sc.ExecuteCommand((int)SHCommamd.Start);
+                            webAPIManager.SHCommandRequest(shID, SHCommamd.Start);
                             Console.WriteLine("SmartHome is started.");
                             break;
                         case "off":
                             Console.WriteLine("Stopping...");
-                            sc.ExecuteCommand((int)SHCommamd.Stop);
+                            webAPIManager.SHCommandRequest(shID, SHCommamd.Stop);
                             Console.WriteLine("SmartHome is stopped.");
                             break;
                         case "restart":
                             Console.WriteLine("Restarting...");
-                            sc.ExecuteCommand((int)SHCommamd.Restart);
+                            webAPIManager.SHCommandRequest(shID, SHCommamd.Restart);
                             Console.WriteLine("SmartHome is restarted.");
                             break;
-                            /*
                         case "ison":
-                            bool isOn = SIManager.Container.GetInstance<ISHConfigRepository>().Get(1).IsOn;
+                            bool isOn = webAPIManager.Get<SHServiceModel>(shID).IsOn;
                             Console.WriteLine("SH is {0}", isOn ? "on" : "off");
                             break;
-                             * */
                         case "exit":
                             return;
                         default:
@@ -62,10 +58,13 @@ namespace SmartHome.Handler
                 Console.WriteLine(e.StackTrace);
                 Console.ReadLine();
             }
-            finally
-            {
-                sc.Stop();
-            }
+        }
+
+        static void InitIOCContainer(Container container)
+        {
+            container.Register<IWebAPIManager, WebAPIManager>();
+
+            container.Verify();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace SmartHome.Core.SmartHome
         int TimerPeriod { get; set; }
         event EventHandler<EventArgs> onChange;
 
-        void StartAsync();
+        void Start();
         void Stop();
     }
 }

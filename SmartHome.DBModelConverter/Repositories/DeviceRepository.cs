@@ -9,7 +9,7 @@ using Entities = SmartHome.Core.Entities;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public class DeviceRepository : DBModelDeviceRepository<Models.Device, Entities.Device>, IDeviceRepository
+    public class DeviceRepository : DBModelDeviceRepository<Models.DeviceModel, Entities.Device>, IDeviceRepository
     {
         public DeviceRepository(ISHRepository<Entities.Device> repository)
         {
@@ -21,10 +21,10 @@ namespace SmartHome.DBModelConverter.Repositories
             IEventLogRepository eventsLogRepository = SIManager.Container.GetInstance<IEventLogRepository>();
             ITriggerRepository triggerRepository = SIManager.Container.GetInstance<ITriggerRepository>();
 
-            IQueryable<Models.Trigger> triggers = SIManager.Container.GetInstance<ITriggerRepository>().GetAll().Where(t => t.Device.ID == id);
+            IQueryable<Models.TriggerModel> triggers = SIManager.Container.GetInstance<ITriggerRepository>().GetAll().Where(t => t.Device.ID == id);
             foreach (var trigger in triggers)
             {
-                IQueryable<Models.EventLog> events = eventsLogRepository.GetAll().Where(e => e.Device.ID == trigger.ID && e.Type.ID == trigger.Type.ID);
+                IQueryable<Models.EventLogModel> events = eventsLogRepository.GetAll().Where(e => e.Device.ID == trigger.ID && e.Type.ID == trigger.Type.ID);
                 foreach (var eventLog in events)
                 {
                     eventsLogRepository.Remove(eventLog.ID);
@@ -36,17 +36,17 @@ namespace SmartHome.DBModelConverter.Repositories
             return base.Remove(id);
         }
 
-        public override Models.Device DBItemToItem(Entities.Device dbDevice)
+        public override Models.DeviceModel DBItemToItem(Entities.Device dbDevice)
         {
             if (dbDevice == null)
             {
                 return null;
             }
 
-            return new Models.Device { ID = dbDevice.ID, Name = dbDevice.Name, Type = SIManager.Container.GetInstance<IDeviceTypeRepository>().Get(dbDevice.DeviceTypeID) };
+            return new Models.DeviceModel { ID = dbDevice.ID, Name = dbDevice.Name, Type = SIManager.Container.GetInstance<IDeviceTypeRepository>().Get(dbDevice.DeviceTypeID) };
         }
 
-        public override Entities.Device ItemToDBItem(Models.Device device)
+        public override Entities.Device ItemToDBItem(Models.DeviceModel device)
         {
             if (device == null)
             {

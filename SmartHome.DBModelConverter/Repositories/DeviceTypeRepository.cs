@@ -9,7 +9,7 @@ using Entities = SmartHome.Core.Entities;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public class DeviceTypeRepository : DBModelNameRepository<Models.DeviceType, Entities.DeviceType>, IDeviceTypeRepository
+    public class DeviceTypeRepository : DBModelNameRepository<Models.DeviceTypeModel, Entities.DeviceType>, IDeviceTypeRepository
     {
         public DeviceTypeRepository(ISHRepository<Entities.DeviceType> repository)
         {
@@ -40,18 +40,18 @@ namespace SmartHome.DBModelConverter.Repositories
             return base.Remove(id);
         }
 
-        public override Models.DeviceType DBItemToItem(Entities.DeviceType dbDeviceType)
+        public override Models.DeviceTypeModel DBItemToItem(Entities.DeviceType dbDeviceType)
         {
             if (dbDeviceType == null)
             {
                 return null;
             }
 
-            Models.DeviceType parent = dbDeviceType.ParentID != null ? this.Get((int)dbDeviceType.ParentID) : null;
-            return new Models.DeviceType { ID = dbDeviceType.ID, Name = dbDeviceType.Name, Parent = parent };
+            Models.DeviceTypeModel parent = dbDeviceType.ParentID != null ? this.Get((int)dbDeviceType.ParentID) : null;
+            return new Models.DeviceTypeModel { ID = dbDeviceType.ID, Name = dbDeviceType.Name, Parent = parent };
         }
 
-        public override Entities.DeviceType ItemToDBItem(Models.DeviceType deviceType)
+        public override Entities.DeviceType ItemToDBItem(Models.DeviceTypeModel deviceType)
         {
             if (deviceType == null)
             {

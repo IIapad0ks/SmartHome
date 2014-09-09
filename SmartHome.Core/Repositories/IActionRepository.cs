@@ -2,5 +2,5 @@
 
 namespace SmartHome.Core.Repositories
 {
-    public interface IActionRepository : IDBModelNameRepository<Action> { }
+    public interface IActionRepository : IDBModelNameRepository<ActionModel> { }
 }

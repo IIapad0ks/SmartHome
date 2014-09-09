@@ -29,19 +29,21 @@ namespace SmartHome.CoreObjects
                     Console.WriteLine("{0}({2}): value set to {1}.", this.GetType().Name, this.value, this.Name);
                     Console.WriteLine("************************************************************");
 
-                    this.initEvent("changeValue");
+                    this.ExecOnEvent(new SaveEventsManagerArgs("setValue"));
                 }
             }
         }
 
-        public override void ReadXml(string xml)
+        public override void ReadXml(System.Xml.XmlReader reader)
         {
-            XmlSerializer serializer = new XmlSerializer(this.GetType());
-            StringReader reader = new StringReader(xml);
-            IValueController valueController = (IValueController)serializer.Deserialize(reader);
+            base.ReadXml(reader);
+            this.value = Int32.Parse(reader["value"]);
+        }
 
-            this.value = valueController.Value;
-            base.ReadXml(xml);
+        public override void WriteXml(System.Xml.XmlWriter writer)
+        {
+            base.WriteXml(writer);
+            writer.WriteAttributeString("value", this.value.ToString());
         }
     }
 }

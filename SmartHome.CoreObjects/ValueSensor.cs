@@ -7,19 +7,13 @@ using System.IO;
 
 namespace SmartHome.CoreObjects
 {
-    [Serializable()]
-    public abstract class ValueSensor : IValueSensor
+    public abstract class ValueSensor : Sensor, IValueSensor
     {
         private int value;
-        [NonSerialized()]
-        private Timer timer;
         private object lockObject = new object();
 
         protected bool isGrow = true;
         
-        public int ID { get; set; }
-        public int TypeID { get; set; }
-        public int TimerPeriod { get; set; }
         public int Value
         {
             get
@@ -40,8 +34,8 @@ namespace SmartHome.CoreObjects
 
                         try
                         {
-                            this.onChange(this, new EventArgs());
-                            this.onEvent(this, new SaveEventsManagerArgs("changeValue"));
+                            this.ExecOnChange();
+                            this.ExecOnEvent(new SaveEventsManagerArgs("changeValue"));
                         }
                         catch (Exception e)
                         {
@@ -56,52 +50,20 @@ namespace SmartHome.CoreObjects
             }
         }
 
-        public event EventHandler<EventArgs> onChange;
-        public event EventHandler<SaveEventsManagerArgs> onEvent;
-
-        public async void StartAsync()
+        public override void ReadXml(System.Xml.XmlReader reader)
         {
-            await Task.Run(() =>
-            {
-                this.timer = new Timer(this.Check, null, 0, this.TimerPeriod);
-            });
+            base.ReadXml(reader);
+            this.value = Int32.Parse(reader["value"]);
+            this.isGrow = Boolean.Parse(reader["isGrow"]);
         }
 
-        public string Name { get; set; }
-
-        public void Stop()
+        public override void WriteXml(System.Xml.XmlWriter writer)
         {
-            this.timer.Dispose();
+            base.WriteXml(writer);
+            writer.WriteAttributeString("value", this.value.ToString());
+            writer.WriteAttributeString("isGrow", this.isGrow.ToString());
         }
 
-        public string WriteXml()
-        {
-            XmlSerializer serializer = new XmlSerializer(this.GetType());
-            StringWriter writer = new StringWriter();
-            serializer.Serialize(writer, this);
-            return writer.ToString();
-        }
-
-        public void ReadXml(string xml)
-        {
-            XmlSerializer serializer = new XmlSerializer(this.GetType());
-            StringReader reader = new StringReader(xml);
-            IValueSensor valueSensor = (IValueSensor)serializer.Deserialize(reader);
-
-            this.Name = valueSensor.Name;
-            this.value = valueSensor.Value;
-        }
-
-        public void Dispose()
-        {
-            this.Dispose(true);
-        }
-
-        protected abstract void Check(object state);
-
-        private void Dispose(bool flag)
-        {
-            this.timer.Dispose();
-        }
+        protected override void Check(object state) { }
     }
 }

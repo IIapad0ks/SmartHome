@@ -12,19 +12,9 @@ using System.IO;
 
 namespace SmartHome.CoreObjects
 {
-    public abstract class OnValue : ITrigger
+    public abstract class OnValue : Trigger, ITrigger
     {
-        public int ID { get; set; }
-        public int TypeID { get; set; }
-        public string Condition { get; set; }
-        public string Name { get; set; }
-
-        [XmlIgnore()]
-        public IController Controller { get; set; }
-
-        public event EventHandler<SaveEventsManagerArgs> onEvent;
-
-        public void Invoke(object sender, EventArgs e)
+        public override void Invoke(object sender, EventArgs e)
         {
             IValueSensor sensor = (IValueSensor)sender;
 
@@ -38,45 +28,10 @@ namespace SmartHome.CoreObjects
             if (result)
             {
                 this.TriggerSuccessFunction();
-                this.onEvent(this, new SaveEventsManagerArgs("valueConditionSuccess"));
+                this.ExecOnEvent(new SaveEventsManagerArgs("valueConditionSuccess"));
             }
         }
 
-        public abstract void TriggerSuccessFunction();
-
-        public virtual string WriteXml()
-        {
-            XmlSerializer serializer = new XmlSerializer(this.GetType());
-            StringWriter writer = new StringWriter();
-            serializer.Serialize(writer, this);
-            return writer.ToString();
-        }
-
-        public virtual void ReadXml(string xml)
-        {
-            XmlSerializer serializer = new XmlSerializer(this.GetType());
-            StringReader reader = new StringReader(xml);
-            ITrigger trigger = (ITrigger)serializer.Deserialize(reader);
-
-            this.ID = trigger.ID;
-            this.Name = trigger.Name;
-            this.Condition = trigger.Condition;
-            this.Controller = trigger.Controller;
-        }
-
-        public System.Xml.Schema.XmlSchema GetSchema()
-        {
-            return null;
-        }
-
-        public void ReadXml(System.Xml.XmlReader reader)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void WriteXml(System.Xml.XmlWriter writer)
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract void TriggerSuccessFunction();
     }
 }

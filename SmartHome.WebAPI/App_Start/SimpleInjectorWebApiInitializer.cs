@@ -35,7 +35,8 @@ namespace SmartHome.WebAPI.App_Start
         private static void InitializeContainer(Container container)
         {
             var webAPILifestyle = new WebApiRequestLifestyle();
-            container.Register<DbContext, SmartHomeDBEntities>(webAPILifestyle);
+
+            container.Register<DbContext, SmartHomeDBContext>(webAPILifestyle);
             container.RegisterOpenGeneric(typeof(ISHRepository<>), typeof(SmartHomeRepository<>));
 
             container.Register<IActionRepository, ActionRepository>();
@@ -44,7 +45,7 @@ namespace SmartHome.WebAPI.App_Start
             container.Register<ISensorRepository, SensorRepository>();
             container.Register<ITriggerRepository, TriggerRepository>();
             container.Register<IEventLogRepository, EventLogRepository>();
-            container.Register<ISHConfigRepository, SHConfigRepository>();
+            container.Register<ISHServiceRepository, SHServiceRepository>();
         }
     }
 }

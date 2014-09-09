@@ -54,7 +54,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DBModelRepository.cs" />
     <Compile Include="Repositories\SensorRepository.cs" />
-    <Compile Include="Repositories\SHConfigRepository.cs" />
+    <Compile Include="Repositories\SHServiceRepository.cs" />
     <Compile Include="Repositories\TriggerRepository.cs" />
   </ItemGroup>
   <ItemGroup>

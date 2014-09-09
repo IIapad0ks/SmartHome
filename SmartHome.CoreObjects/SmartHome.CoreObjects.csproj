@@ -48,6 +48,7 @@
     <Compile Include="ISwitchController.cs" />
     <Compile Include="IValueController.cs" />
     <Compile Include="IValueSensor.cs" />
+    <Compile Include="IValueTrigger.cs" />
     <Compile Include="SwitchController.cs" />
     <Compile Include="SwitchValueController.cs" />
     <Compile Include="ValueSensor.cs" />

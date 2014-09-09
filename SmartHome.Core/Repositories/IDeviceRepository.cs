@@ -2,5 +2,5 @@
 
 namespace SmartHome.Core.Repositories
 {
-    public interface IDeviceRepository : IDBModelNameRepository<Device> { }
+    public interface IDeviceRepository : IDBModelNameRepository<DeviceModel> { }
 }

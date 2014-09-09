@@ -55,7 +55,7 @@ namespace SmartHome.Data.Repositories
         {
             try
             {
-                db.Entry<T>(item).State = System.Data.EntityState.Modified;
+                db.Entry<T>(item).State = EntityState.Modified;
                 db.SaveChanges();
 
                 return true;
