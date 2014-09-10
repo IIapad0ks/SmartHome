@@ -20,7 +20,7 @@ namespace SmartHome.Service
         private string libDirname;
         private string[] allowInterfaces = new string[] { "IController", "ISensor", "ITrigger" };
         private bool isOn = false;
-        private int saveEventPeriod = 60000;
+        private int saveEventPeriod = 10000;
         private Timer saveEventTimer;
 
         private ISaveEventsManager eventsManager;
@@ -43,7 +43,7 @@ namespace SmartHome.Service
             this.eventsManager = saveEventsManager;
             this.webAPIManager = webAPIManager;
 
-            this.id = 1; //1 - IIapadoks SmartHomeService
+            this.id = 8;
             SHServiceModel shConfig = webAPIManager.Get<SHServiceModel>(this.id); 
             this.configFilename = shConfig.ConfigFilename;
             this.libDirname = shConfig.LibDirname;
@@ -138,6 +138,7 @@ namespace SmartHome.Service
 
                 this.eventsManager.SaveEvents();
                 this.isOn = false;
+                this.UpdateState();
                 Console.WriteLine("SmartHome is stopped.");
 
                 return true;

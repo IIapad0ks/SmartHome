@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public class ActionRepository : DBModelNameRepository<Models.ActionModel, Entities.EventAction>, IActionRepository
+    public class ActionRepository : DBModelNameRepository<Models.EventActionModel, Entities.EventAction>, IActionRepository
     {
         public ActionRepository(ISHRepository<Entities.EventAction> repository)
         {
@@ -24,17 +24,17 @@ namespace SmartHome.DBModelConverter.Repositories
             return base.Remove(id);
         }
 
-        public override Models.ActionModel DBItemToItem(Entities.EventAction dbAction)
+        public override Models.EventActionModel DBItemToItem(Entities.EventAction dbAction)
         {
             if (dbAction == null)
             {
                 return null;
             }
 
-            return new Models.ActionModel { ID = dbAction.ID, Name = dbAction.Name };
+            return new Models.EventActionModel { ID = dbAction.ID, Name = dbAction.Name };
         }
 
-        public override Entities.EventAction ItemToDBItem(Models.ActionModel action)
+        public override Entities.EventAction ItemToDBItem(Models.EventActionModel action)
         {
             if (action == null)
             {

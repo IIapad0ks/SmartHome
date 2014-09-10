@@ -99,7 +99,12 @@
     <Compile Include="Exceptions\SmartHomeConfigException.cs" />
     <Compile Include="Exceptions\SmartHomeException.cs" />
     <Compile Include="Exceptions\SmartHomePluginException.cs" />
-    <Compile Include="Models\ActionModel.cs" />
+    <Compile Include="Migrations\201409091321313_init.cs" />
+    <Compile Include="Migrations\201409091321313_init.Designer.cs">
+      <DependentUpon>201409091321313_init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\EventActionModel.cs" />
     <Compile Include="Models\DeviceModel.cs" />
     <Compile Include="Models\DeviceTypeModel.cs" />
     <Compile Include="Models\EventLogModel.cs" />
@@ -163,7 +168,11 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201409091321313_init.resx">
+      <DependentUpon>201409091321313_init.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

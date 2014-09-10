@@ -8,36 +8,39 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Text;
+using SmartHome.Core.Service;
 
 namespace SmartHome.Service
 {
     public class SaveEventsManager : ISaveEventsManager
     {
         private IEventLogRepository repository;
+        private IWebAPIManager webAPIManager;
         private object lockEvents = new object();
 
         public List<EventLogModel> Events { get; private set; }
 
-        public SaveEventsManager(IEventLogRepository repository)
+        public SaveEventsManager(IEventLogRepository repository, IWebAPIManager webAPIManager)
         {
             this.repository = repository;
+            this.webAPIManager = webAPIManager;
             this.Events = new List<EventLogModel>();
         }
 
         public void AddEvent(IConfig config, string actionName)
         {
-            StringBuilder configState = new StringBuilder();
-            XmlWriter writer = XmlWriter.Create(configState);
-            config.WriteXml(writer);
+            StringWriter writer = new StringWriter();
+            XmlWriter xmlWriter = XmlWriter.Create(writer);
+            config.WriteXml(xmlWriter);
 
             lock (this.lockEvents)
             {
                 this.Events.Add(new EventLogModel
                 {
                     Type = new DeviceTypeModel { ID = config.TypeID },
-                    Device = new DeviceModel { ID = config.ID },
-                    DeviceState = configState.ToString(),
-                    Action = new SmartHome.Core.Models.ActionModel { Name = actionName },
+                    DeviceID = config.ID,
+                    DeviceState = writer.ToString(),
+                    Action = new SmartHome.Core.Models.EventActionModel { Name = actionName },
                     EventDatetime = DateTime.Now
                 });
             }
@@ -45,11 +48,14 @@ namespace SmartHome.Service
 
         public void SaveEvents()
         {
+            List<EventLogModel> saveEventList; 
             lock (lockEvents)
             {
-                repository.Add(this.Events.AsQueryable());
+                saveEventList = this.Events.ToList();
                 this.Events.Clear();
             }
+
+            this.webAPIManager.SaveEvents(saveEventList);
         }
     }
 }

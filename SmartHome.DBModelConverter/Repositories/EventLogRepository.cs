@@ -46,8 +46,8 @@ namespace SmartHome.DBModelConverter.Repositories
             return new Models.EventLogModel 
             { 
                 ID = dbEventLog.ID, 
-                Action = SIManager.Container.GetInstance<IActionRepository>().Get(dbEventLog.ActionID), 
-                Device = this.GetDevice(dbEventLog.ConfigID, dbEventLog.DeviceTypeID), 
+                Action = SIManager.Container.GetInstance<IActionRepository>().Get(dbEventLog.EventActionID), 
+                DeviceID = dbEventLog.ConfigID, 
                 Type = SIManager.Container.GetInstance<IDeviceTypeRepository>().Get(dbEventLog.DeviceTypeID), 
                 DeviceState = dbEventLog.DeviceState, 
                 EventDatetime = dbEventLog.EventDatetime 
@@ -61,7 +61,15 @@ namespace SmartHome.DBModelConverter.Repositories
                 return null;
             }
 
-            Entities.EventLog dbEventLog = new Entities.EventLog { ID = eventLog.ID, ActionID = eventLog.Action.ID, ConfigID = eventLog.Device.ID, DeviceState = eventLog.DeviceState, EventDatetime = eventLog.EventDatetime };
+            Entities.EventLog dbEventLog = new Entities.EventLog 
+            { 
+                ID = eventLog.ID, 
+                DeviceTypeID = eventLog.Type.ID, 
+                EventActionID = eventLog.Action.ID,
+                ConfigID = eventLog.DeviceID, 
+                DeviceState = eventLog.DeviceState, 
+                EventDatetime = eventLog.EventDatetime 
+            };
 
             return dbEventLog;
         }

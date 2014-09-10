@@ -37,7 +37,7 @@ namespace SmartHome.DBModelConverter.Repositories
             IEventLogRepository eventsLogRepository = SIManager.Container.GetInstance<IEventLogRepository>();
 
             Models.IDeviceModel device = this.Get(id);
-            foreach (var eventLog in eventsLogRepository.GetAll().Where(e => e.Device.ID == device.ID && e.Type.ID == device.Type.ID))
+            foreach (var eventLog in eventsLogRepository.GetAll().Where(e => e.DeviceID == device.ID && e.Type.ID == device.Type.ID))
             {
                 eventsLogRepository.Remove(eventLog.ID);
             }

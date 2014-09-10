@@ -10,6 +10,7 @@ namespace SmartHome.Core.Entities
 {
     public class EventAction : INameEntity
     {
+        [Key]
         public int ID { get; set; }
         public string Name { get; set; }
     }

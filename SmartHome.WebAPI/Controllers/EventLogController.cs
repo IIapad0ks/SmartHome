@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Newtonsoft.Json;
 
 namespace SmartHome.WebAPI.Controllers
 {
@@ -31,16 +32,9 @@ namespace SmartHome.WebAPI.Controllers
         }
 
         // POST api/eventlog
-        public EventLogModel Post([FromBody]EventLogModel item)
+        public void Post([FromBody]List<EventLogModel> item)
         {
-            return this.repository.Add(item);
-        }
-
-        // POST api/eventlogs
-        [Route("api/eventlogs")]
-        public void Post([FromBody]IQueryable<EventLogModel> items)
-        {
-            this.repository.Add(items);
+            this.repository.Add(item.AsQueryable());
         }
 
         // PUT api/eventlog/5

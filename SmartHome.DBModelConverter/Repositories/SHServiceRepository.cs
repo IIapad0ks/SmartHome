@@ -17,7 +17,7 @@ namespace SmartHome.DBModelConverter.Repositories
                 return null;
             }
 
-            return new Models.SHServiceModel { ID = dbItem.ID, ConfigFilename = dbItem.ConfigFilename, LibDirname = dbItem.LibsDirname, IsOn = dbItem.IsOn };
+            return new Models.SHServiceModel { ID = dbItem.ID, Name = dbItem.Name, ConfigFilename = dbItem.ConfigFilename, LibDirname = dbItem.LibsDirname, IsOn = dbItem.IsOn };
         }
 
         public override Entities.SmartHomeService ItemToDBItem(Models.SHServiceModel item)
@@ -27,7 +27,7 @@ namespace SmartHome.DBModelConverter.Repositories
                 return null;
             }
 
-            return new Entities.SmartHomeService { ID = item.ID, ConfigFilename = item.ConfigFilename, LibsDirname = item.LibDirname, IsOn = item.IsOn };
+            return new Entities.SmartHomeService { ID = item.ID, Name = item.Name, ConfigFilename = item.ConfigFilename, LibsDirname = item.LibDirname, IsOn = item.IsOn };
         }
     }
 }

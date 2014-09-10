@@ -21,12 +21,10 @@ namespace SmartHome.WebAPI.App_Start
         {
             // Did you know the container can diagnose your configuration? Go to: https://bit.ly/YE8OJj.
             var container = new Container();
-            
             InitializeContainer(container);
-
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
-       
             container.Verify();
+            SIManager.Container = container;
             
             GlobalConfiguration.Configuration.DependencyResolver =
                 new SimpleInjectorWebApiDependencyResolver(container);
@@ -36,7 +34,7 @@ namespace SmartHome.WebAPI.App_Start
         {
             var webAPILifestyle = new WebApiRequestLifestyle();
 
-            container.Register<DbContext, SmartHomeDBContext>(webAPILifestyle);
+            container.Register<DbContext, SmartHomeDBContext>();
             container.RegisterOpenGeneric(typeof(ISHRepository<>), typeof(SmartHomeRepository<>));
 
             container.Register<IActionRepository, ActionRepository>();

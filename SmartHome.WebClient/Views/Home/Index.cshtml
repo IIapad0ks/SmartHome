@@ -1,0 +1,35 @@
+﻿@model SmartHome.Core.Models.SHServiceModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-9">
+            <p class="lead">
+                Current state of your SmartHome "@Html.DisplayFor(m => m.Name)":
+                @if (Model.IsOn)
+                {
+                    <strong>ON</strong>    
+                }
+                else
+                {
+                    <strong>OFF</strong>
+                }
+            </p>
+        </div>
+        @if (Model.IsOn)
+        {
+            <div class="col-lg-2 col-lg-offset-1 btn-group">
+                @Html.ActionLink("off", "Stop", "Home", null, new { @class = "btn btn-default text-uppercase strong", @role="button" })
+                @Html.ActionLink("restart", "Restart", "Home", null, new { @class = "btn btn-default text-uppercase strong", @role="button" })
+            </div>
+        }
+        else
+        {
+            <div class="col-lg-1 col-lg-offset-2 btn-group">
+                @Html.ActionLink("on", "Start", "Home", null, new { @class = "btn btn-default text-uppercase strong", @role="button" })
+            </div>
+        }
+    </div>
+</div>

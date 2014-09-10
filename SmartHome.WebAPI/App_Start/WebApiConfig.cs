@@ -11,6 +11,12 @@ namespace SmartHome.WebAPI
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Routes.MapHttpRoute(
+                name: "SHService",
+                routeTemplate: "api/{controller}/{id}/{command}",
+                defaults: new { controller = "SmartHome", id = RouteParameter.Optional, command = RouteParameter.Optional }
+            );
         }
     }
 }

@@ -14,7 +14,7 @@ namespace SmartHome.Handler
         {
             InitIOCContainer(SIManager.Container);
             IWebAPIManager webAPIManager = SIManager.Container.GetInstance<IWebAPIManager>();
-            int shID = 1;
+            int shID = 8;
 
             try
             {

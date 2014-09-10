@@ -18,7 +18,7 @@ namespace SmartHome.Core.Service
         bool Update<T>(T item) where T : class, IModel;
         bool Delete<T>(int id) where T : class, IModel;
 
-        void SaveEvents(IList<EventLogModel> eventList);
+        void SaveEvents(List<EventLogModel> eventList);
         void SHCommandRequest(int id, SHCommamd command);
     } 
 }

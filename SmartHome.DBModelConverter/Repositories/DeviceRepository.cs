@@ -21,10 +21,10 @@ namespace SmartHome.DBModelConverter.Repositories
             IEventLogRepository eventsLogRepository = SIManager.Container.GetInstance<IEventLogRepository>();
             ITriggerRepository triggerRepository = SIManager.Container.GetInstance<ITriggerRepository>();
 
-            IQueryable<Models.TriggerModel> triggers = SIManager.Container.GetInstance<ITriggerRepository>().GetAll().Where(t => t.Device.ID == id);
+            IQueryable<Models.TriggerModel> triggers = triggerRepository.GetAll().Where(t => t.Device.ID == id);
             foreach (var trigger in triggers)
             {
-                IQueryable<Models.EventLogModel> events = eventsLogRepository.GetAll().Where(e => e.Device.ID == trigger.ID && e.Type.ID == trigger.Type.ID);
+                IQueryable<Models.EventLogModel> events = eventsLogRepository.GetAll().Where(e => e.DeviceID == trigger.ID && e.Type.ID == trigger.Type.ID);
                 foreach (var eventLog in events)
                 {
                     eventsLogRepository.Remove(eventLog.ID);

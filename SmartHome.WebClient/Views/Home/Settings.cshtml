@@ -1,0 +1,52 @@
+﻿@model SmartHome.Core.Models.SHServiceModel
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Settings</h2>
+
+@using (Html.BeginForm("Edit", "Home", FormMethod.Post, new { @class = "form-horizontal", @role = "form" }))
+{
+    <fieldset>
+        <legend>@Html.DisplayFor(m => m.Name)</legend>
+        @Html.HiddenFor(m => m.ID)
+        @Html.HiddenFor(m => m.Name)
+        @Html.HiddenFor(m => m.IsOn)
+        <div class="form-group">
+            @Html.LabelFor(m => m.ConfigFilename, new { @class = "col-lg-2 control-label" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(m => m.ConfigFilename, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.LibDirname, new { @class = "col-lg-2 control-label" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(m => m.LibDirname, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="IsOn" class="col-lg-2 control-label">State</label>
+            @if (Model.IsOn)
+            {
+                <div class="col-lg-1 text-uppercase"><p class="form-control-static navbar-right"><strong>on</strong></p></div>
+                <div class="col-lg-2 col-lg-offset-7 btn-group">
+                    @Html.ActionLink("off", "Stop", "Home", null, new { @class = " btn btn-default text-uppercase strong", @role="button" })
+                    @Html.ActionLink("restart", "Restart", "Home", null, new { @class = "btn btn-default text-uppercase strong", @role="button" })
+                </div>
+            }
+            else
+            {
+                <div class="col-lg-1 text-uppercase"><p class="form-control-static navbar-right"><strong>off</strong></p></div>
+                <div class="col-lg-1 col-lg-offset-8 btn-group">
+                    @Html.ActionLink("on", "Start", "Home", null, new { @class = "btn btn-default text-uppercase strong" })
+                </div>
+            }
+        </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button type="submit" class="col-lg-2 text-center btn btn-success"><strong>Save</strong></button>
+            </div>
+        </div>
+    </fieldset>
+}
+
