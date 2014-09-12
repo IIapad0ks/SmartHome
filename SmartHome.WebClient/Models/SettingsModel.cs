@@ -8,11 +8,6 @@ namespace SmartHome.WebClient.Models
 {
     public class SettingsModel
     {
-        public SettingsModel(SHServiceModel shService)
-        {
-
-        }
-
         public string XmlConfig { get; set; }
         public string ConfigFilename { get; set; }
         public List<PluginModel> Plugins { get; set; }

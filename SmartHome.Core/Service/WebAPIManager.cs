@@ -24,7 +24,7 @@ namespace SmartHome.Core.Service
 
         public List<T> Get<T>() where T : class, IModel
         {
-            return this.client.GetAsync(String.Format("{0}/{1}/", this.Uri, this.GetControllerName<T>())).Result.Content.ReadAsAsync<IQueryable<T>>().Result.ToList();
+            return this.client.GetAsync(String.Format("{0}/{1}/", this.Uri, this.GetControllerName<T>())).Result.Content.ReadAsAsync<List<T>>().Result;
         } 
 
         public T Get<T>(int id) where T : class, IModel

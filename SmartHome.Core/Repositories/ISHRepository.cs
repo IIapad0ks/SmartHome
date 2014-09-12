@@ -11,6 +11,7 @@ namespace SmartHome.Core.Repositories
     public interface ISHRepository<T> : IDisposable where T : class, IEntity
     {
         IQueryable<T> GetAll();
+        IQueryable<T> Get(Func<T, bool> expression);
         T Get(int id);
         T Add(T item);
         bool Remove(int id);

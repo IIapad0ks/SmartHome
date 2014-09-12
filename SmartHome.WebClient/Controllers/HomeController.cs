@@ -8,7 +8,6 @@ using SmartHome.Core.Service;
 using SH = SmartHome.Core.SmartHome;
 using System.Web.Routing;
 using System.IO;
-using SmartHome.WebClient.Models;
 
 namespace SmartHome.WebClient.Controllers
 {
@@ -31,8 +30,7 @@ namespace SmartHome.WebClient.Controllers
         // GET: /home/edit
         public ActionResult Settings()
         {
-            SHServiceModel shService = this.webAPIManager.Get<SHServiceModel>(this.shID);
-            return View(new SettingsModel(shService));
+            return View(this.webAPIManager.Get<SHServiceModel>(this.shID));
         }
 
         // GET: /home/edit

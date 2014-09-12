@@ -4,19 +4,16 @@ using System.Linq;
 using System.Web;
 using SmartHome.Core;
 using SmartHome.Core.Repositories;
-using Models = SmartHome.Core.Models;
-using Entities = SmartHome.Core.Entities;
+using SmartHome.Core.Models;
+using SmartHome.Core.Entities;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public class EventLogRepository : DBModelRepository<Models.EventLogModel, Entities.EventLog>, IEventLogRepository
+    public class EventLogRepository : DBModelRepository<EventLogModel, EventLog>, IEventLogRepository
     {
-        public EventLogRepository(ISHRepository<Entities.EventLog> repository)
-        {
-            this.repository = repository;
-        }
+        public EventLogRepository(ISHRepository<EventLog> repository) : base(repository) { }
 
-        public override Models.EventLogModel Add(Models.EventLogModel item)
+        public override EventLogModel Add(EventLogModel item)
         {
             if (item.Action.ID == default(int))
             {
@@ -26,7 +23,7 @@ namespace SmartHome.DBModelConverter.Repositories
             return base.Add(item);
         }
 
-        public override bool Update(Models.EventLogModel item)
+        public override bool Update(EventLogModel item)
         {
             if (item.Action.ID != default(int))
             {
@@ -36,57 +33,35 @@ namespace SmartHome.DBModelConverter.Repositories
             return base.Update(item);
         }
 
-        public override Models.EventLogModel DBItemToItem(Entities.EventLog dbEventLog)
+        public virtual IQueryable<EventLogModel> Get(IDeviceModel device)
         {
-            if (dbEventLog == null)
-            {
-                return null;
-            }
-
-            return new Models.EventLogModel 
-            { 
-                ID = dbEventLog.ID, 
-                Action = SIManager.Container.GetInstance<IActionRepository>().Get(dbEventLog.EventActionID), 
-                DeviceID = dbEventLog.ConfigID, 
-                Type = SIManager.Container.GetInstance<IDeviceTypeRepository>().Get(dbEventLog.DeviceTypeID), 
-                DeviceState = dbEventLog.DeviceState, 
-                EventDatetime = dbEventLog.EventDatetime 
-            };
+            return this.GetAll().Where(e => e.DeviceID == device.ID && e.Type.ID == device.Type.ID);
         }
 
-        public override Entities.EventLog ItemToDBItem(Models.EventLogModel eventLog)
+        public override EventLogModel DBItemToItem(EventLog dbItem)
         {
-            if (eventLog == null)
-            {
-                return null;
-            }
-
-            Entities.EventLog dbEventLog = new Entities.EventLog 
-            { 
-                ID = eventLog.ID, 
-                DeviceTypeID = eventLog.Type.ID, 
-                EventActionID = eventLog.Action.ID,
-                ConfigID = eventLog.DeviceID, 
-                DeviceState = eventLog.DeviceState, 
-                EventDatetime = eventLog.EventDatetime 
-            };
-
-            return dbEventLog;
+            EventLogModel item = base.DBItemToItem(dbItem);
+            item.Action = SIManager.Container.GetInstance<IActionRepository>().Get(dbItem.EventActionID);
+            item.DeviceID = dbItem.ConfigID;
+            item.Type = SIManager.Container.GetInstance<IDeviceTypeRepository>().Get(dbItem.DeviceTypeID);
+            item.DeviceState = dbItem.DeviceState;
+            item.EventDatetime = dbItem.EventDatetime;
+            return item;
         }
 
-        private Models.IDeviceModel GetDevice(int id, int typeID)
+        public override EventLog ItemToDBItem(EventLogModel item)
         {
-            Models.IDeviceModel device = null;
-            List<IDBModelNameRepository<Models.IDeviceModel>> repositories = new List<IDBModelNameRepository<Models.IDeviceModel>>();
-            foreach (var repository in repositories)
-            {
-                device = repository.GetAll().FirstOrDefault(nm => nm.ID == id && nm.Type.ID == typeID);
-            }
-
-            return device;
+            EventLog dbItem = base.ItemToDBItem(item);
+            dbItem.ID = item.ID;
+            dbItem.DeviceTypeID = item.Type.ID;
+            dbItem.EventActionID = item.Action.ID;
+            dbItem.ConfigID = item.DeviceID;
+            dbItem.DeviceState = item.DeviceState;
+            dbItem.EventDatetime = item.EventDatetime;
+            return dbItem;
         }
 
-        public void Add(IQueryable<Models.EventLogModel> events)
+        public void Add(IQueryable<EventLogModel> events)
         {
             foreach (var e in events)
             {

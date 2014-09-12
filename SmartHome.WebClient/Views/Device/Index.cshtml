@@ -1,0 +1,28 @@
+﻿@model List<SmartHome.Core.Models.DeviceModel>
+@{
+    ViewBag.Title = "Index";
+}
+<div class="page-header">
+    <h2>Device list</h2>
+</div>
+<div class="container-fluid">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Device type</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Type.Name</td>
+                    <td>@Html.ActionLink("details", "Details", new { @id = item.ID })</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

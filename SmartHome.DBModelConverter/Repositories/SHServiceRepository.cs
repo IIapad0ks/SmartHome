@@ -1,33 +1,29 @@
 ﻿using SmartHome.Core.Repositories;
-using Models = SmartHome.Core.Models;
-using Entities = SmartHome.Core.Entities;
+using SmartHome.Core.Models;
+using SmartHome.Core.Entities;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public class SHServiceRepository : DBModelNameRepository<Models.SHServiceModel, Entities.SmartHomeService>, ISHServiceRepository
+    public class SHServiceRepository : DBModelNameRepository<SHServiceModel, SmartHomeService>, ISHServiceRepository
     {
-        public SHServiceRepository(ISHRepository<Entities.SmartHomeService> repository) {
-            this.repository = repository;
+        public SHServiceRepository(ISHRepository<SmartHomeService> repository) : base(repository) { }
+
+        public override SHServiceModel DBItemToItem(SmartHomeService dbItem)
+        {
+            SHServiceModel item = base.DBItemToItem(dbItem);
+            item.ConfigFilename = dbItem.ConfigFilename; 
+            item.LibDirname = dbItem.LibsDirname;
+            item.IsOn = dbItem.IsOn;
+            return item;
         }
 
-        public override Models.SHServiceModel DBItemToItem(Entities.SmartHomeService dbItem)
+        public override SmartHomeService ItemToDBItem(SHServiceModel item)
         {
-            if (dbItem == null)
-            {
-                return null;
-            }
-
-            return new Models.SHServiceModel { ID = dbItem.ID, Name = dbItem.Name, ConfigFilename = dbItem.ConfigFilename, LibDirname = dbItem.LibsDirname, IsOn = dbItem.IsOn };
-        }
-
-        public override Entities.SmartHomeService ItemToDBItem(Models.SHServiceModel item)
-        {
-            if (item == null)
-            {
-                return null;
-            }
-
-            return new Entities.SmartHomeService { ID = item.ID, Name = item.Name, ConfigFilename = item.ConfigFilename, LibsDirname = item.LibDirname, IsOn = item.IsOn };
+            SmartHomeService dbItem = base.ItemToDBItem(item);
+            dbItem.ConfigFilename = item.ConfigFilename;
+            dbItem.LibsDirname = item.LibDirname;
+            dbItem.IsOn = item.IsOn;
+            return dbItem;
         }
     }
 }

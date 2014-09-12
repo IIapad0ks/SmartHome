@@ -44,6 +44,9 @@ namespace SmartHome.WebAPI.App_Start
             container.Register<ITriggerRepository, TriggerRepository>();
             container.Register<IEventLogRepository, EventLogRepository>();
             container.Register<ISHServiceRepository, SHServiceRepository>();
+            container.Register<IDeviceDetailsRepository, DeviceDetailsRepository>();
+            container.Register<ISensorDetailsRepository, SensorDetailsRepository>();
+            container.Register<ITriggerDetailsRepository, TriggerDetailsRepository>();
         }
     }
 }

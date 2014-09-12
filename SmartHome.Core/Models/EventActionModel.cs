@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SmartHome.Core.Models
 {
-    public class EventActionModel : INameModel
+    public class EventActionModel : NameModel
     {
-        public int ID { get; set; }
-        public string Name { get; set; }
     }
 }

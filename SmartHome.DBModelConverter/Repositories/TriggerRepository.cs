@@ -5,19 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using SmartHome.Core;
 using SmartHome.Core.Repositories;
-using Models = SmartHome.Core.Models;
-using Entities = SmartHome.Core.Entities;
+using SmartHome.Core.Models;
+using SmartHome.Core.Entities;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public class TriggerRepository : DBModelDeviceRepository<Models.TriggerModel, Entities.Trigger>, ITriggerRepository
+    public class TriggerRepository : DBModelDeviceRepository<TriggerModel, Trigger>, ITriggerRepository
     {
-        public TriggerRepository(ISHRepository<Entities.Trigger> repository)
-        {
-            this.repository = repository;
-        }
+        public TriggerRepository(ISHRepository<Trigger> repository) : base(repository) { }
 
-        public override Models.TriggerModel Add(Models.TriggerModel item)
+        public override TriggerModel Add(TriggerModel item)
         {
             IDeviceRepository deviceRepository = SIManager.Container.GetInstance<IDeviceRepository>();
             ISensorRepository sensorRepository = SIManager.Container.GetInstance<ISensorRepository>();
@@ -35,7 +32,7 @@ namespace SmartHome.DBModelConverter.Repositories
             return base.Add(item);
         }
 
-        public override bool Update(Models.TriggerModel item)
+        public override bool Update(TriggerModel item)
         {
             IDeviceRepository deviceRepository = SIManager.Container.GetInstance<IDeviceRepository>();
             ISensorRepository sensorRepository = SIManager.Container.GetInstance<ISensorRepository>();
@@ -53,41 +50,21 @@ namespace SmartHome.DBModelConverter.Repositories
             return base.Update(item);
         }
 
-        public override Models.TriggerModel DBItemToItem(Entities.Trigger dbItem)
+        public override TriggerModel DBItemToItem(Trigger dbItem)
         {
-            if (dbItem == null)
-            {
-                return null;
-            }
-
-            return new Models.TriggerModel
-            {
-                ID = dbItem.ID,
-                Name = dbItem.Name,
-                Type = SIManager.Container.GetInstance<IDeviceTypeRepository>().Get(dbItem.DeviceTypeID),
-                Device = SIManager.Container.GetInstance<IDeviceRepository>().Get(dbItem.DeviceID),
-                Sensor = SIManager.Container.GetInstance<ISensorRepository>().Get(dbItem.SensorID),
-                Condition = dbItem.Condition
-            };
+            TriggerModel item = base.DBItemToItem(dbItem);
+            item.Device = SIManager.Container.GetInstance<IDeviceRepository>().Get(dbItem.DeviceID);
+            item.Sensor = SIManager.Container.GetInstance<ISensorRepository>().Get(dbItem.SensorID);
+            item.Condition = dbItem.Condition;
+            return item;
         }
 
-        public override Entities.Trigger ItemToDBItem(Models.TriggerModel item)
+        public override Trigger ItemToDBItem(TriggerModel item)
         {
-            if (item == null)
-            {
-                return null;
-            }
-
-            Entities.Trigger dbItem = new Entities.Trigger
-            {
-                ID = item.ID,
-                Name = item.Name,
-                DeviceTypeID = item.Type.ID,
-                DeviceID = item.Device.ID,
-                SensorID = item.Sensor.ID,
-                Condition = item.Condition
-            };
-
+            Trigger dbItem = base.ItemToDBItem(item);
+            dbItem.DeviceID = item.Device.ID;
+            dbItem.SensorID = item.Sensor.ID;
+            dbItem.Condition = item.Condition;
             return dbItem;
         }
     }

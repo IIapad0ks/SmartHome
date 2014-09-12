@@ -21,6 +21,11 @@ namespace SmartHome.Data.Repositories
             return db.Set<T>().AsQueryable();
         }
 
+        public IQueryable<T> Get(Func<T, bool> expression)
+        {
+            return db.Set<T>().Where(expression).AsQueryable();
+        }
+
         public T Get(int id)
         {
             return db.Set<T>().Find(id);

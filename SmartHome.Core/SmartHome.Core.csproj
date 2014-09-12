@@ -104,24 +104,36 @@
       <DependentUpon>201409091321313_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\EventActionModel.cs" />
+    <Compile Include="Models\DeviceDetailsBaseModel.cs" />
+    <Compile Include="Models\DeviceDetailsModel.cs" />
     <Compile Include="Models\DeviceModel.cs" />
+    <Compile Include="Models\DeviceBaseModel.cs" />
     <Compile Include="Models\DeviceTypeModel.cs" />
+    <Compile Include="Models\EventActionModel.cs" />
     <Compile Include="Models\EventLogModel.cs" />
+    <Compile Include="Models\IDeviceDetailsModel.cs" />
     <Compile Include="Models\IDeviceModel.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\INameModel.cs" />
+    <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\NameModel.cs" />
+    <Compile Include="Models\SensorDetailsModel.cs" />
     <Compile Include="Models\SensorModel.cs" />
     <Compile Include="Models\SHServiceModel.cs" />
+    <Compile Include="Models\TriggerDetailsModel.cs" />
     <Compile Include="Models\TriggerModel.cs" />
     <Compile Include="Repositories\IActionRepository.cs" />
     <Compile Include="Repositories\IDBModelRepository.cs" />
+    <Compile Include="Repositories\IDBModelDeviceDetailsRepository.cs" />
+    <Compile Include="Repositories\IDeviceDetailsRepository.cs" />
     <Compile Include="Repositories\IDeviceRepository.cs" />
     <Compile Include="Repositories\IDeviceTypeRepository.cs" />
     <Compile Include="Repositories\IDBModelNameRepository.cs" />
     <Compile Include="Repositories\IEventLogRepository.cs" />
+    <Compile Include="Repositories\ISensorDetailsRepository.cs" />
     <Compile Include="Repositories\ISensorRepository.cs" />
     <Compile Include="Repositories\ISHServiceRepository.cs" />
+    <Compile Include="Repositories\ITriggerDetailsRepository.cs" />
     <Compile Include="Repositories\ITriggerRepository.cs" />
     <Compile Include="Service\WebAPIManager.cs" />
     <Compile Include="SIManager.cs" />

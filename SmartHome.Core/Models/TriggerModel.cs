@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Core.Models
 {
-    public class TriggerModel : IDeviceModel
+    public class TriggerModel : NameModel, IDeviceModel
     {
-        public int ID { get; set; }
-        public string Name { get; set; }
         public DeviceTypeModel Type { get; set; }
         public DeviceModel Device { get; set; }
         public SensorModel Sensor { get; set; }

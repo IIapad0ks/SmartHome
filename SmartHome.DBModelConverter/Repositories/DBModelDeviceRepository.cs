@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models = SmartHome.Core.Models;
-using Entities = SmartHome.Core.Entities;
+using SmartHome.Core.Models;
+using SmartHome.Core.Entities;
 using SmartHome.Core;
 using SmartHome.Core.Repositories;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public abstract class DBModelDeviceRepository<T, TEntity> : DBModelNameRepository<T, TEntity> where T : class, Models.IDeviceModel where TEntity : class, Entities.INameEntity
+    public abstract class DBModelDeviceRepository<T, TEntity> : DBModelNameRepository<T, TEntity> where T : class, IDeviceModel where TEntity : class, IDeviceEntity
     {
+        public DBModelDeviceRepository(ISHRepository<TEntity> repository) : base(repository) { }
+
         public override T Add(T item)
         {
             if (item.Type.ID == default(int))
@@ -36,13 +38,27 @@ namespace SmartHome.DBModelConverter.Repositories
         {
             IEventLogRepository eventsLogRepository = SIManager.Container.GetInstance<IEventLogRepository>();
 
-            Models.IDeviceModel device = this.Get(id);
+            IDeviceModel device = this.Get(id);
             foreach (var eventLog in eventsLogRepository.GetAll().Where(e => e.DeviceID == device.ID && e.Type.ID == device.Type.ID))
             {
                 eventsLogRepository.Remove(eventLog.ID);
             }
 
             return base.Remove(id);
+        }
+
+        public override T DBItemToItem(TEntity dbItem)
+        {
+            T item = base.DBItemToItem(dbItem);
+            item.Type = SIManager.Container.GetInstance<IDeviceTypeRepository>().Get(dbItem.DeviceTypeID);
+            return item;
+        }
+
+        public override TEntity ItemToDBItem(T item)
+        {
+            TEntity dbItem = base.ItemToDBItem(item);
+            dbItem.DeviceTypeID = item.Type.ID;
+            return dbItem;
         }
     }
 }

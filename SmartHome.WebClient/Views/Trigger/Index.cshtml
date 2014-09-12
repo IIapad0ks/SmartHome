@@ -1,0 +1,34 @@
+﻿@model List<SmartHome.Core.Models.TriggerModel>
+@{
+    ViewBag.Title = "Index";
+}
+<div class="page-header">
+    <h2>Device settings</h2>
+</div>
+<div class="container-fluid">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Settings type</th>
+                <th>Condition</th>
+                <th>Device</th>
+                <th>Sensor</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Type.Name</td>
+                    <td>@item.Condition</td>
+                    <td>@Html.ActionLink(item.Device.Name, "Details", "Device", new { @id = item.Device.ID }, null)</td>
+                    <td>@Html.ActionLink(item.Sensor.Name, "Details", "Sensor", new { @id = item.Sensor.ID }, null)</td>
+                    <td>@Html.ActionLink("details", "Details", new { @id = item.ID }) | @Html.ActionLink("edit", "Edit", new { @id = item.ID })</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

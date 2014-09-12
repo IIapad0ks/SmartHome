@@ -1,0 +1,43 @@
+﻿@model SmartHome.Core.Models.TriggerDetailsModel
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="page-header">
+    <h3>@Model.Name <small>(@Model.Type.Name)</small></h3>
+    @Html.ActionLink("edit", "Edit", new { @id = Model.ID }, new { @class = "pull-right" });
+</div>
+<div class="container-fluid">
+    <dl class="dl-horizontal">
+        <dt>Condition</dt>
+        <dd>@Model.Condition</dd>
+        <dt>Device</dt>
+        <dd>@Html.ActionLink(String.Format("{0}<small>({1})</small>", Model.Device.Name, Model.Device.Type.Name), "details", "device", new { @id = @Model.Device.ID }, null)</dd>
+        <dt>Sensor</dt>
+        <dd>@Html.ActionLink(String.Format("{0}<small>({1})</small>", Model.Sensor.Name, Model.Sensor.Type.Name), "details", "sensor", new { @id = @Model.Sensor.ID }, null)</dd>
+    </dl>
+    <div class="panel panel-default">
+        <div class="panel-heading"><span class="lead">Events</span></div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Datetime</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var e in Model.EventList)
+                {
+                    <tr>
+                        <td>@e.Action.Name</td>
+                        <td>@e.EventDatetime</td>
+                        <td>@e.DeviceState</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div> 
+</div>
+
+

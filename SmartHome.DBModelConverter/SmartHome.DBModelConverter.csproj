@@ -46,15 +46,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Repositories\ActionRepository.cs" />
+    <Compile Include="Repositories\DBModelDeviceDetailsRepository.cs" />
     <Compile Include="Repositories\DBModelDeviceRepository.cs" />
     <Compile Include="Repositories\DBModelNameRepository.cs" />
+    <Compile Include="Repositories\DeviceDetailsRepository.cs" />
     <Compile Include="Repositories\DeviceRepository.cs" />
     <Compile Include="Repositories\DeviceTypeRepository.cs" />
     <Compile Include="Repositories\EventLogRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DBModelRepository.cs" />
+    <Compile Include="Repositories\SensorDetailsRepository.cs" />
     <Compile Include="Repositories\SensorRepository.cs" />
     <Compile Include="Repositories\SHServiceRepository.cs" />
+    <Compile Include="Repositories\TriggerDetailsRepository.cs" />
     <Compile Include="Repositories\TriggerRepository.cs" />
   </ItemGroup>
   <ItemGroup>

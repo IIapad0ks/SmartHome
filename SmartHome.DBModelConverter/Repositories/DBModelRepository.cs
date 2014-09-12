@@ -8,9 +8,14 @@ using SmartHome.Core.Models;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public abstract class DBModelRepository<T, TEntity> : IDBModelRepository<T> where T : class, IModel where TEntity : class, IEntity
+    public abstract class DBModelRepository<T, TEntity> : IDBModelRepository<T, TEntity> where T : class, IModel where TEntity : class, IEntity
     {
         protected ISHRepository<TEntity> repository;
+
+        public DBModelRepository(ISHRepository<TEntity> repository)
+        {
+            this.repository = repository;
+        }
 
         public virtual IQueryable<T> GetAll()
         {
@@ -22,6 +27,12 @@ namespace SmartHome.DBModelConverter.Repositories
             }
 
             return items.AsQueryable();
+        }
+
+        public virtual IQueryable<T> Get(Func<TEntity, bool> expression)
+        {
+            IQueryable<TEntity> dbItems = this.repository.Get(expression);
+            return this.DBItemsToItems(dbItems);
         }
 
         public virtual T Get(int id)
@@ -48,8 +59,41 @@ namespace SmartHome.DBModelConverter.Repositories
             return repository.Update(dbItem);
         }
 
-        public abstract T DBItemToItem(TEntity dbItem);
-        public abstract TEntity ItemToDBItem(T item);
+        public virtual T DBItemToItem(TEntity dbItem)
+        {
+            T item = Activator.CreateInstance<T>();
+            item.ID = dbItem.ID;
+            return item;
+        }
+
+        public virtual TEntity ItemToDBItem(T item)
+        {
+            TEntity dbItem = Activator.CreateInstance<TEntity>();
+            dbItem.ID = item.ID;
+            return dbItem;
+        }
+
+        public virtual IQueryable<T> DBItemsToItems(IQueryable<TEntity> dbItems)
+        {
+            List<T> items = new List<T>();
+            foreach (var dbItem in dbItems)
+            {
+                items.Add(this.DBItemToItem(dbItem));
+            }
+
+            return items.AsQueryable();
+        }
+
+        public virtual IQueryable<TEntity> ItemsToDBItems(IQueryable<T> items)
+        {
+            List<TEntity> dbItems = new List<TEntity>();
+            foreach (var item in items)
+            {
+                dbItems.Add(this.ItemToDBItem(item));
+            }
+
+            return dbItems.AsQueryable();
+        }
 
         public void Dispose()
         {

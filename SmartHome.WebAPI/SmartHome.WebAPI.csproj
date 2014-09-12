@@ -145,13 +145,16 @@
   <ItemGroup>
     <Compile Include="App_Start\SimpleInjectorWebApiInitializer.cs" />
     <Compile Include="Controllers\DeviceController.cs" />
+    <Compile Include="Controllers\DeviceDetailsController.cs" />
     <Compile Include="Controllers\DeviceTypeController.cs" />
     <Compile Include="Controllers\EventLogController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SensorController.cs" />
+    <Compile Include="Controllers\SensorDetailsController.cs" />
     <Compile Include="Controllers\SHServiceController.cs" />
     <Compile Include="Controllers\SmartHomeController.cs" />
     <Compile Include="Controllers\TriggerController.cs" />
+    <Compile Include="Controllers\TriggerDetailsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

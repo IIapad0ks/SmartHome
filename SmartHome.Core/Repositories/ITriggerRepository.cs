@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SmartHome.Core.Models;
+using SmartHome.Core.Entities;
 
 namespace SmartHome.Core.Repositories
 {
-    public interface ITriggerRepository : IDBModelNameRepository<TriggerModel> { }
+    public interface ITriggerRepository : IDBModelNameRepository<TriggerModel, Trigger> { }
 }
