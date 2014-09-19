@@ -18,13 +18,13 @@ namespace SmartHome.WebClient.Controllers
         }
 
         //
-        // GET: /Sensor/
+        // GET: /trigger/
         public ActionResult Index()
         {
             return View(this.webAPIManager.Get<TriggerModel>());
         }
 
-        // GET: /sensor/details/5
+        // GET: /trigger/details/5
         public ActionResult Details(int id)
         {
             return View(this.webAPIManager.Get<TriggerDetailsModel>(id));

@@ -336,9 +336,26 @@ namespace SmartHome.Service
 
         private void UpdateState()
         {
+            //delete unused configs
+            /*
+            this.UpdateConfigs<DeviceModel, IController>(this.Controllers);
+            this.UpdateConfigs<SensorModel, ISensor>(this.Sensors);
+            this.UpdateConfigs<TriggerModel, ITrigger>(this.Triggers
+             * */
+
             SHServiceModel sh = this.webAPIManager.Get<SHServiceModel>(this.id);
             sh.IsOn = this.IsOn;
             this.webAPIManager.Update<SHServiceModel>(sh);
+        }
+
+        private void UpdateConfigs<TModel, TConfig>(List<TConfig> configs) where TModel : class, IDeviceModel where TConfig : class, IConfig
+        {
+            List<TModel> allDevices = this.webAPIManager.Get<TModel>();
+            List<TModel> deletedDevices = allDevices.Where(d => !configs.Any(c => c.ID == d.ID)).ToList();
+            foreach (var deletedDevice in deletedDevices)
+            {
+                this.webAPIManager.Delete<TModel>(deletedDevice.ID);
+            }
         }
 
         public void Dispose()

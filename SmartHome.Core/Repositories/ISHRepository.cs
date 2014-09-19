@@ -8,13 +8,13 @@ using SmartHome.Core.Models;
 
 namespace SmartHome.Core.Repositories
 {
-    public interface ISHRepository<T> : IDisposable where T : class, IEntity
+    public interface ISHRepository : IDisposable 
     {
-        IQueryable<T> GetAll();
-        IQueryable<T> Get(Func<T, bool> expression);
-        T Get(int id);
-        T Add(T item);
-        bool Remove(int id);
-        bool Update(T item);
+        IQueryable<T> GetAll<T>() where T : class, IEntity;
+        IQueryable<T> Get<T>(Func<T, bool> expression) where T : class, IEntity;
+        T Get<T>(int id) where T : class, IEntity;
+        T Add<T>(T item) where T : class, IEntity;
+        bool Remove<T>(int id) where T : class, IEntity;
+        bool Update<T>(T item) where T : class, IEntity;
     }
 }

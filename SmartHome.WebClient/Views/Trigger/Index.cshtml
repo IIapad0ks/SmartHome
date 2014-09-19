@@ -26,7 +26,7 @@
                     <td>@item.Condition</td>
                     <td>@Html.ActionLink(item.Device.Name, "Details", "Device", new { @id = item.Device.ID }, null)</td>
                     <td>@Html.ActionLink(item.Sensor.Name, "Details", "Sensor", new { @id = item.Sensor.ID }, null)</td>
-                    <td>@Html.ActionLink("details", "Details", new { @id = item.ID }) | @Html.ActionLink("edit", "Edit", new { @id = item.ID })</td>
+                    <td>@Html.ActionLink("details", "Details", new { @id = item.ID })</td>
                 </tr>
             }
         </tbody>

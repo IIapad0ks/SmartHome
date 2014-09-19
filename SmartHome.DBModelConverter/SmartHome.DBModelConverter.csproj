@@ -11,6 +11,8 @@
     <AssemblyName>SmartHome.DBModelConverter</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,21 +47,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Repositories\ActionRepository.cs" />
-    <Compile Include="Repositories\DBModelDeviceDetailsRepository.cs" />
-    <Compile Include="Repositories\DBModelDeviceRepository.cs" />
-    <Compile Include="Repositories\DBModelNameRepository.cs" />
-    <Compile Include="Repositories\DeviceDetailsRepository.cs" />
-    <Compile Include="Repositories\DeviceRepository.cs" />
-    <Compile Include="Repositories\DeviceTypeRepository.cs" />
-    <Compile Include="Repositories\EventLogRepository.cs" />
+    <Compile Include="Repositories\ActionConverter.cs" />
+    <Compile Include="Repositories\DBModelDeviceConverter.cs" />
+    <Compile Include="Repositories\DBModelNameConverter.cs" />
+    <Compile Include="Repositories\DeviceDetailsConverter.cs" />
+    <Compile Include="Repositories\DeviceConverter.cs" />
+    <Compile Include="Repositories\DeviceTypeConverter.cs" />
+    <Compile Include="Repositories\EventLogConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\DBModelRepository.cs" />
-    <Compile Include="Repositories\SensorDetailsRepository.cs" />
-    <Compile Include="Repositories\SensorRepository.cs" />
-    <Compile Include="Repositories\SHServiceRepository.cs" />
-    <Compile Include="Repositories\TriggerDetailsRepository.cs" />
-    <Compile Include="Repositories\TriggerRepository.cs" />
+    <Compile Include="Repositories\DBModelConverter.cs" />
+    <Compile Include="Repositories\SensorDetailsConverter.cs" />
+    <Compile Include="Repositories\SensorConverter.cs" />
+    <Compile Include="Repositories\SHServiceConverter.cs" />
+    <Compile Include="Repositories\TriggerDetailsConverter.cs" />
+    <Compile Include="Repositories\TriggerConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartHome.Core\SmartHome.Core.csproj">
@@ -76,6 +77,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

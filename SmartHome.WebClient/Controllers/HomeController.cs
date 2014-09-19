@@ -27,20 +27,6 @@ namespace SmartHome.WebClient.Controllers
             return View(this.webAPIManager.Get<SHServiceModel>(this.shID));
         }
 
-        // GET: /home/edit
-        public ActionResult Settings()
-        {
-            return View(this.webAPIManager.Get<SHServiceModel>(this.shID));
-        }
-
-        // GET: /home/edit
-        [HttpPost]
-        public ActionResult Settings(SHServiceModel shService)
-        {
-            this.webAPIManager.Update<SHServiceModel>(shService);
-            return View(this.webAPIManager.Get<SHServiceModel>(this.shID));
-        }
-
         // GET: /home/start
         public ActionResult Start()
         {

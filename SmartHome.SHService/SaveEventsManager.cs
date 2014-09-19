@@ -9,18 +9,19 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Text;
 using SmartHome.Core.Service;
+using SmartHome.Core.DBModelConverters;
 
 namespace SmartHome.Service
 {
     public class SaveEventsManager : ISaveEventsManager
     {
-        private IEventLogRepository repository;
+        private IEventLogConverter repository;
         private IWebAPIManager webAPIManager;
         private object lockEvents = new object();
 
         public List<EventLogModel> Events { get; private set; }
 
-        public SaveEventsManager(IEventLogRepository repository, IWebAPIManager webAPIManager)
+        public SaveEventsManager(IEventLogConverter repository, IWebAPIManager webAPIManager)
         {
             this.repository = repository;
             this.webAPIManager = webAPIManager;

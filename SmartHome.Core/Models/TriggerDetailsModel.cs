@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Core.Models
 {
-    public class TriggerDetailsModel : TriggerModel, IDeviceDetailsModel
+    public class TriggerDetailsModel : TriggerModel
     {
         public List<EventLogModel> EventList { get; set; }
     }

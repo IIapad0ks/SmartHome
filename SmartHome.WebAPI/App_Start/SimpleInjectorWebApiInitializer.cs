@@ -13,6 +13,8 @@ namespace SmartHome.WebAPI.App_Start
     using System.Data.Entity;
     using SmartHome.Core.Entities;
     using SimpleInjector.Extensions;
+    using SmartHome.Core.DBModelConverters;
+    using SmartHome.Core.Models;
     
     public static class SimpleInjectorWebApiInitializer
     {
@@ -34,19 +36,20 @@ namespace SmartHome.WebAPI.App_Start
         {
             var webAPILifestyle = new WebApiRequestLifestyle();
 
-            container.Register<DbContext, SmartHomeDBContext>();
-            container.RegisterOpenGeneric(typeof(ISHRepository<>), typeof(SmartHomeRepository<>));
+            container.Register<DbContext, SmartHomeDBContext>(webAPILifestyle);
+            container.Register<ISHRepository, SHRepository>();
 
-            container.Register<IActionRepository, ActionRepository>();
-            container.Register<IDeviceRepository, DeviceRepository>();
-            container.Register<IDeviceTypeRepository, DeviceTypeRepository>();
-            container.Register<ISensorRepository, SensorRepository>();
-            container.Register<ITriggerRepository, TriggerRepository>();
-            container.Register<IEventLogRepository, EventLogRepository>();
-            container.Register<ISHServiceRepository, SHServiceRepository>();
-            container.Register<IDeviceDetailsRepository, DeviceDetailsRepository>();
-            container.Register<ISensorDetailsRepository, SensorDetailsRepository>();
-            container.Register<ITriggerDetailsRepository, TriggerDetailsRepository>();
+            container.Register<IActionConverter, ActionConverter>();
+            container.Register<IDeviceTypeConverter, DeviceTypeConverter>();
+            container.Register<IEventLogConverter, EventLogConverter>();
+            container.Register<ISHServiceConverter, SHServiceConverter>();
+
+            container.Register<ISensorConverter<SensorModel>, SensorConverter<SensorModel>>();
+            container.Register<ITriggerConverter<TriggerModel>, TriggerConverter<TriggerModel>>();
+            container.Register<IDeviceConverter<DeviceModel>, DeviceConverter<DeviceModel>>();
+            container.Register<ISensorConverter<SensorDetailsModel>, SensorDetailsConverter>();
+            container.Register<ITriggerConverter<TriggerDetailsModel>, TriggerDetailsConverter>();
+            container.Register<IDeviceConverter<DeviceDetailsModel>, DeviceDetailsConverter>();
         }
     }
 }
