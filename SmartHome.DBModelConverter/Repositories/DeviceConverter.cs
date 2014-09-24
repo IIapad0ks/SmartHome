@@ -10,28 +10,36 @@ using SmartHome.Core.DBModelConverters;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public class DeviceConverter<T> : DBModelDeviceConverter<T, Device>, IDeviceConverter<T> where T : DeviceModel
+    public class DeviceConverter : DBModelNameConverter<DeviceModel, Device>, IDeviceConverter
     {
         public DeviceConverter(ISHRepository repository) : base(repository) { }
 
-        public override bool Remove(int id)
+        public override DeviceModel DBItemToItem(Device dbItem)
         {
-            IEventLogConverter eventsLogRepository = SIManager.Container.GetInstance<IEventLogConverter>();
-            ITriggerConverter<TriggerModel> triggerRepository = SIManager.Container.GetInstance<ITriggerConverter<TriggerModel>>();
+            DeviceModel item = base.DBItemToItem(dbItem);
 
-            List<TriggerModel> triggers = triggerRepository.GetAll().Where(t => t.Device.ID == id).ToList();
-            foreach (var trigger in triggers)
-            {
-                List<EventLogModel> events = eventsLogRepository.GetAll().Where(e => e.DeviceID == trigger.ID && e.Type.ID == trigger.Type.ID).ToList();
-                foreach (var eventLog in events)
-                {
-                    eventsLogRepository.Remove(eventLog.ID);
-                }
+            item.FastAccess = dbItem.FastAccess;
+            item.IsOn = dbItem.IsOn;
+            item.Room = SIManager.Container.GetInstance<IRoomConverter>().DBItemToItem(dbItem.Room);
+            item.Type = SIManager.Container.GetInstance<IDeviceTypeConverter>().DBItemToItem(dbItem.DeviceType);
+            item.Value = dbItem.Value;
+            item.WorkingTime = dbItem.WorkingTime;
 
-                triggerRepository.Remove(trigger.ID);
-            }
+            return item;
+        }
 
-            return base.Remove(id);
+        public override Device ItemToDBItem(DeviceModel item)
+        {
+            Device dbItem = base.ItemToDBItem(item);
+
+            dbItem.FastAccess = item.FastAccess;
+            dbItem.IsOn = item.IsOn;
+            dbItem.RoomId = item.Room.Id;
+            dbItem.DeviceTypeId = item.Type.Id;
+            dbItem.Value = item.Value;
+            dbItem.WorkingTime = item.WorkingTime;
+
+            return dbItem;
         }
     }
 }

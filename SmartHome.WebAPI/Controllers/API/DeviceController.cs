@@ -11,9 +11,9 @@ namespace SmartHome.WebAPI.Controllers
 {
     public class DeviceController : ApiController
     {
-        IDeviceConverter<DeviceModel> repository;
+        IDeviceConverter repository;
 
-        public DeviceController(IDeviceConverter<DeviceModel> repository)
+        public DeviceController(IDeviceConverter repository)
         {
             this.repository = repository;
         }
@@ -21,13 +21,34 @@ namespace SmartHome.WebAPI.Controllers
         // GET api/device
         public List<DeviceModel> Get()
         {
-            return this.repository.GetAll();
+            return this.repository.Get();
         }
 
         // GET api/device/5
         public DeviceModel Get(int id)
         {
             return this.repository.Get(id);
+        }
+
+        // GET api/device/room/5
+        [HttpGet]
+        public List<DeviceModel> Room(int id)
+        {
+            return this.repository.Get(d => d.RoomId == id);
+        }
+
+        // GET api/device/device
+        [HttpGet]
+        public List<DeviceModel> Device()
+        {
+            return this.repository.Get(d => d.DeviceType.DeviceClassId == 1);
+        }
+
+        // GET api/device/sensor
+        [HttpGet]
+        public List<DeviceModel> Sensor()
+        {
+            return this.repository.Get(d => d.DeviceType.DeviceClassId == 2);
         }
 
         // POST api/device
@@ -39,7 +60,7 @@ namespace SmartHome.WebAPI.Controllers
         // PUT api/device/5
         public bool Put(int id, [FromBody]DeviceModel item)
         {
-            item.ID = id;
+            item.Id = id;
             return this.repository.Update(item);
         }
 

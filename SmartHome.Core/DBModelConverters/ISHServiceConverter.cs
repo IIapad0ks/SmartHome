@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Core.DBModelConverters
 {
-    public interface ISHServiceConverter : IDBModelNameConverter<SHServiceModel, SmartHomeService> { }
+    public interface ISHServiceConverter : IDBModelNameConverter<SHServiceModel, SHService> { }
 }

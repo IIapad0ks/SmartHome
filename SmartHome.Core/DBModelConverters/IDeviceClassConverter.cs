@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Core.DBModelConverters
 {
-    public interface IEventLogConverter : IDBModelConverter<EventLogModel, EventLog>
+    public interface IDeviceClassConverter : IDBModelNameConverter<DeviceClassModel, DeviceClass>
     {
-        void Add(List<EventLogModel> events);
     }
 }

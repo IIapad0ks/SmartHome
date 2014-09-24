@@ -11,11 +11,13 @@ namespace SmartHome.Core.Entities
     public class DeviceType : INameEntity
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
+        public bool NeedTimeControl { get; set; }
+        public bool HasValue { get; set; }
 
-        [ForeignKey("Parent")]
-        public int? ParentID { get; set; }
-        public virtual DeviceType Parent { get; set; }
+        [ForeignKey("DeviceClass")]
+        public int DeviceClassId { get; set; }
+        public virtual DeviceClass DeviceClass { get; set; }
     }
 }

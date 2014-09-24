@@ -73,13 +73,10 @@ namespace SmartHome.SHService
             container.Register<IDeviceTypeConverter, DeviceTypeConverter>();
             container.Register<IEventLogConverter, EventLogConverter>();
             container.Register<ISHServiceConverter, SHServiceConverter>();
-
-            container.Register<ISensorConverter<SensorModel>, SensorConverter<SensorModel>>();
-            container.Register<ITriggerConverter<TriggerModel>, TriggerConverter<TriggerModel>>();
-            container.Register<IDeviceConverter<DeviceModel>, DeviceConverter<DeviceModel>>();
-            container.Register<ISensorConverter<SensorDetailsModel>, SensorDetailsConverter>();
-            container.Register<ITriggerConverter<TriggerDetailsModel>, TriggerDetailsConverter>();
-            container.Register<IDeviceConverter<DeviceDetailsModel>, DeviceDetailsConverter>();
+            container.Register<IDeviceConverter, DeviceConverter>();
+            container.Register<IDeviceClassConverter, DeviceClassConverter>();
+            container.Register<ITriggerConverter, TriggerConverter>();
+            container.Register<IRoomConverter, RoomConverter>();
 
             container.Verify();
         }

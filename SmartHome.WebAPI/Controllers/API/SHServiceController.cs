@@ -22,7 +22,7 @@ namespace SmartHome.WebAPI.Controllers
         // GET api/shservice
         public List<SHServiceModel> Get()
         {
-            return this.repository.GetAll();
+            return this.repository.Get();
         }
 
         // GET api/shservice/5
@@ -40,7 +40,7 @@ namespace SmartHome.WebAPI.Controllers
         // PUT api/shservice/5
         public bool Put(int id, [FromBody]SHServiceModel item)
         {
-            item.ID = id;
+            item.Id = id;
             return this.repository.Update(item);
         }
 

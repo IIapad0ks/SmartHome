@@ -11,61 +11,33 @@ using SmartHome.Core.DBModelConverters;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public class TriggerConverter<T> : DBModelDeviceConverter<T, Trigger>, ITriggerConverter<T> where T : TriggerModel
+    public class TriggerConverter : DBModelNameConverter<TriggerModel, Trigger>, ITriggerConverter
     {
         public TriggerConverter(ISHRepository repository) : base(repository) { }
 
-        public override T Add(T item)
+        public override TriggerModel DBItemToItem(Trigger dbItem)
         {
-            IDeviceConverter<DeviceModel> deviceRepository = SIManager.Container.GetInstance<IDeviceConverter<DeviceModel>>();
-            ISensorConverter<SensorModel> sensorRepository = SIManager.Container.GetInstance<ISensorConverter<SensorModel>>();
+            TriggerModel item = base.DBItemToItem(dbItem);
 
-            if (item.Device.ID == default(int))
-            {
-                item.Device = deviceRepository.Add(item.Device);
-            }
-
-            if (item.Sensor.ID == default(int))
-            {
-                item.Sensor = sensorRepository.Add(item.Sensor);
-            }
-
-            return base.Add(item);
-        }
-
-        public override bool Update(T item)
-        {
-            IDeviceConverter<DeviceModel> deviceRepository = SIManager.Container.GetInstance<IDeviceConverter<DeviceModel>>();
-            ISensorConverter<SensorModel> sensorRepository = SIManager.Container.GetInstance<ISensorConverter<SensorModel>>();
-
-            if (item.Device.ID != default(int))
-            {
-                deviceRepository.Update(item.Device);
-            }
-
-            if (item.Sensor.ID != default(int))
-            {
-                sensorRepository.Update(item.Sensor);
-            }
-
-            return base.Update(item);
-        }
-
-        public override T DBItemToItem(Trigger dbItem)
-        {
-            T item = base.DBItemToItem(dbItem);
-            item.Device = SIManager.Container.GetInstance<IDeviceConverter<DeviceModel>>().Get(dbItem.DeviceID);
-            item.Sensor = SIManager.Container.GetInstance<ISensorConverter<SensorModel>>().Get(dbItem.SensorID);
+            item.Action = SIManager.Container.GetInstance<IActionConverter>().DBItemToItem(dbItem.EventAction);
             item.Condition = dbItem.Condition;
+            item.Device = SIManager.Container.GetInstance<IDeviceConverter>().DBItemToItem(dbItem.Device);
+            item.Sensor = SIManager.Container.GetInstance<IDeviceConverter>().DBItemToItem(dbItem.Sensor);
+            item.SetValue = dbItem.SetValue;
+
             return item;
         }
 
-        public override Trigger ItemToDBItem(T item)
+        public override Trigger ItemToDBItem(TriggerModel item)
         {
             Trigger dbItem = base.ItemToDBItem(item);
-            dbItem.DeviceID = item.Device.ID;
-            dbItem.SensorID = item.Sensor.ID;
+
+            dbItem.EventActionId = item.Action.Id;
             dbItem.Condition = item.Condition;
+            dbItem.DeviceId = item.Device.Id;
+            dbItem.SensorId = item.Sensor.Id;
+            dbItem.SetValue = item.SetValue;
+
             return dbItem;
         }
     }

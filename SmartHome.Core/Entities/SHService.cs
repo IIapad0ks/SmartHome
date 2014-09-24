@@ -8,13 +8,11 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Core.Entities
 {
-    public class SmartHomeService : INameEntity
+    public class SHService : INameEntity
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
-        public string ConfigFilename { get; set; }
-        public string LibsDirname { get; set; }
         public bool IsOn { get; set; }
     }
 }

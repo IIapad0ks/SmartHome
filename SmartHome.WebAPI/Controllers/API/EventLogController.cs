@@ -23,7 +23,7 @@ namespace SmartHome.WebAPI.Controllers
         // GET api/eventlog
         public List<EventLogModel> Get()
         {
-            return this.repository.GetAll();
+            return this.repository.Get();
         }
 
         // GET api/eventlog/5
@@ -41,7 +41,7 @@ namespace SmartHome.WebAPI.Controllers
         // PUT api/eventlog/5
         public bool Put(int id, [FromBody]EventLogModel item)
         {
-            item.ID = id;
+            item.Id = id;
             return this.repository.Update(item);
         }
 

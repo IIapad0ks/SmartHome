@@ -14,17 +14,6 @@ namespace SmartHome.DBModelConverter.Repositories
     {
         public DBModelNameConverter(ISHRepository repository) : base(repository) { }
 
-        public override T Add(T item)
-        {
-            T existsItem = this.Get(item.Name);
-            if (existsItem != null)
-            {
-                return existsItem;
-            }
-
-            return base.Add(item);
-        }
-
         public virtual T Get(string name)
         {
             TEntity dbItem = repository.GetAll<TEntity>().FirstOrDefault(d => d.Name == name);

@@ -14,46 +14,25 @@ namespace SmartHome.DBModelConverter.Repositories
     {
         public DeviceTypeConverter(ISHRepository repository) : base(repository) { }
 
-        public override bool Remove(int id)
-        {
-            using (IDeviceConverter<DeviceModel> deviceRepository = SIManager.Container.GetInstance<IDeviceConverter<DeviceModel>>())
-            {
-                foreach (var device in deviceRepository.GetAll().Where(d => d.Type.ID == id))
-                {
-                    deviceRepository.Remove(device.ID);
-                }
-            }
-
-            using (ISensorConverter<SensorModel> sensorRepository = SIManager.Container.GetInstance<ISensorConverter<SensorModel>>())
-            {
-                foreach (var sensor in sensorRepository.GetAll().Where(s => s.Type.ID == id))
-                {
-                    sensorRepository.Remove(sensor.ID);
-                }
-            }
-
-            using (ITriggerConverter<TriggerModel> triggerRepository = SIManager.Container.GetInstance<ITriggerConverter<TriggerModel>>())
-            {
-                foreach (var trigger in triggerRepository.GetAll().Where(t => t.Type.ID == id))
-                {
-                    triggerRepository.Remove(trigger.ID);
-                }
-            }
-
-            return base.Remove(id);
-        }
-
         public override DeviceTypeModel DBItemToItem(DeviceType dbItem)
         {
             DeviceTypeModel item = base.DBItemToItem(dbItem);
-            item.Parent = dbItem.ParentID != null ? this.Get((int)dbItem.ParentID) : null;
+
+            item.NeedTimeControl = dbItem.NeedTimeControl;
+            item.HasValue = dbItem.HasValue;
+            item.Class = SIManager.Container.GetInstance<IDeviceClassConverter>().DBItemToItem(dbItem.DeviceClass);
+
             return item; 
         }
 
         public override DeviceType ItemToDBItem(DeviceTypeModel item)
         {
             DeviceType dbItem = base.ItemToDBItem(item);
-            dbItem.ParentID = item.Parent != null ? (int?)item.Parent.ID : null;
+
+            dbItem.DeviceClassId = item.Class.Id;
+            dbItem.HasValue = item.HasValue;
+            dbItem.NeedTimeControl = item.NeedTimeControl;
+
             return dbItem;
         }
     }

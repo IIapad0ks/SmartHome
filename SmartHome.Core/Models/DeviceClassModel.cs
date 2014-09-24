@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Core.Models
 {
-    public class SensorDetailsModel : SensorModel
+    public class DeviceClassModel : INameModel
     {
-        public List<EventLogModel> EventList { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

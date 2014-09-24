@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Core.Entities
 {
-    public class Sensor : IDeviceEntity
+    public class Room : INameEntity
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
 
-        [ForeignKey("DeviceType")]
-        public int DeviceTypeID { get; set; }
-        public virtual DeviceType DeviceType { get; set; }
+        [ForeignKey("SHService")]
+        public int SHServiceId { get; set; }
+        public virtual SHService SHService { get; set; }
     }
 }

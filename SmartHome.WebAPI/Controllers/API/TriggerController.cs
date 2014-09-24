@@ -12,9 +12,9 @@ namespace SmartHome.WebAPI.Controllers
 {
     public class TriggerController : ApiController
     {
-        ITriggerConverter<TriggerModel> repository;
+        ITriggerConverter repository;
 
-        public TriggerController(ITriggerConverter<TriggerModel> repository)
+        public TriggerController(ITriggerConverter repository)
         {
             this.repository = repository;
         }
@@ -22,7 +22,7 @@ namespace SmartHome.WebAPI.Controllers
         // GET api/trigger
         public List<TriggerModel> Get()
         {
-            return this.repository.GetAll();
+            return this.repository.Get();
         }
 
         // GET api/trigger/5
@@ -40,7 +40,7 @@ namespace SmartHome.WebAPI.Controllers
         // PUT api/trigger/5
         public bool Put(int id, [FromBody]TriggerModel item)
         {
-            item.ID = id;
+            item.Id = id;
             return this.repository.Update(item);
         }
 

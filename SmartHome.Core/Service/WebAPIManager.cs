@@ -39,7 +39,7 @@ namespace SmartHome.Core.Service
 
         public bool Update<T>(T item) where T : class, IModel
         {
-            return this.client.PutAsJsonAsync<T>(String.Format("{0}/{1}/{2}", this.Uri, this.GetControllerName<T>(), item.ID), item).Result.Content.ReadAsAsync<bool>().Result;
+            return this.client.PutAsJsonAsync<T>(String.Format("{0}/{1}/{2}", this.Uri, this.GetControllerName<T>(), item.Id), item).Result.Content.ReadAsAsync<bool>().Result;
         }
 
         public bool Delete<T>(int id) where T : class, IModel

@@ -8,6 +8,6 @@ namespace SmartHome.Core.Models
 {
     public interface IModel
     {
-        int ID { get; set; }
+        int Id { get; set; }
     }
 }

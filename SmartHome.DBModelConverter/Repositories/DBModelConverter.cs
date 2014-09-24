@@ -12,7 +12,6 @@ namespace SmartHome.DBModelConverter.Repositories
 {
     public abstract class DBModelConverter<T, TEntity> : IDBModelConverter<T, TEntity> where T : class, IModel where TEntity : class, IEntity
     {
-        protected int perPage = 25;
         protected ISHRepository repository;
 
         public DBModelConverter(ISHRepository repository)
@@ -20,16 +19,11 @@ namespace SmartHome.DBModelConverter.Repositories
             this.repository = repository;
         }
 
-        public virtual List<T> GetAll()
+        public virtual List<T> Get()
         {
             List<T> items = new List<T>();
             List<TEntity> dbItems = repository.GetAll<TEntity>().ToList();
-            foreach (var dbItem in dbItems)
-            {
-                items.Add(this.DBItemToItem(dbItem));
-            }
-
-            return items;
+            return this.DBItemsToItems(dbItems);
         }
 
         public virtual List<T> Get(Func<TEntity, bool> expression)
@@ -65,14 +59,14 @@ namespace SmartHome.DBModelConverter.Repositories
         public virtual T DBItemToItem(TEntity dbItem)
         {
             T item = Activator.CreateInstance<T>();
-            item.ID = dbItem.ID;
+            item.Id = dbItem.Id;
             return item;
         }
 
         public virtual TEntity ItemToDBItem(T item)
         {
             TEntity dbItem = Activator.CreateInstance<TEntity>();
-            dbItem.ID = item.ID;
+            dbItem.Id = item.Id;
             return dbItem;
         }
 

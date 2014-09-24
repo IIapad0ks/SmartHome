@@ -11,11 +11,20 @@ namespace SmartHome.Core.Entities
     public class Device : IDeviceEntity
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
+        public int Value { get; set; }
+        public bool IsOn { get; set; }
+        public bool FastAccess { get; set; }
+
+        [ForeignKey("Room")]
+        public int RoomId { get; set; }
+        public virtual Room Room { get; set; }
+
+        public int WorkingTime { get; set; }
 
         [ForeignKey("DeviceType")]
-        public int DeviceTypeID { get; set; }
+        public int DeviceTypeId { get; set; }
         public virtual DeviceType DeviceType { get; set; }
     }
 }

@@ -7,19 +7,22 @@ using SmartHome.Core.DBModelConverters;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public class ActionConverter : DBModelNameConverter<EventActionModel, EventAction>, IActionConverter
+    public class ActionConverter : DBModelNameConverter<ActionModel, EventAction>, IActionConverter
     {
         public ActionConverter(ISHRepository repository) : base(repository) { }
 
-        public override bool Remove(int id)
+        public override ActionModel DBItemToItem(EventAction dbItem)
         {
-            IEventLogConverter eventLogRepository = SIManager.Container.GetInstance<IEventLogConverter>();
-            foreach (var eventLog in eventLogRepository.GetAll().Where(e => e.Action.ID == id))
-            {
-                eventLogRepository.Remove(eventLog.ID);
-            }
+            ActionModel item = base.DBItemToItem(dbItem);
+            item.CanSetValue = dbItem.CanSetValue;
+            return item;
+        }
 
-            return base.Remove(id);
+        public override EventAction ItemToDBItem(ActionModel item)
+        {
+            EventAction dbItem = base.ItemToDBItem(item);
+            dbItem.CanSetValue = item.CanSetValue;
+            return dbItem;
         }
     }
 }

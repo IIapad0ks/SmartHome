@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Core.Models
 {
-    public class TriggerDetailsModel : TriggerModel
+    public class RoomModel : INameModel
     {
-        public List<EventLogModel> EventList { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public SHServiceModel Home { get; set; }
     }
 }

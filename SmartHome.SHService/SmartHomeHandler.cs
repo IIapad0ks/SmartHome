@@ -45,8 +45,8 @@ namespace SmartHome.Service
 
             this.id = 8;
             SHServiceModel shConfig = webAPIManager.Get<SHServiceModel>(this.id); 
-            this.configFilename = shConfig.ConfigFilename;
-            this.libDirname = shConfig.LibDirname;
+            this.configFilename = "";
+            this.libDirname = "";
 
             this.Controllers = new List<IController>();
             this.Sensors = new List<ISensor>();
@@ -238,7 +238,7 @@ namespace SmartHome.Service
                     Type currentType = currentTypeSelectResult.First();
                     IConfig config = (IConfig)Activator.CreateInstance(currentType);
                     config.Name = elem.Attribute("name").Value;
-                    config.TypeID = this.webAPIManager.Save<DeviceTypeModel>(new DeviceTypeModel { Name = currentType.FullName }).ID;
+                    config.TypeID = this.webAPIManager.Save<DeviceTypeModel>(new DeviceTypeModel { Name = currentType.FullName }).Id;
                     config.onEvent += (object sender, SaveEventsManagerArgs args) =>
                     {
                         this.eventsManager.AddEvent((IConfig)sender, args.ActionName);
@@ -250,14 +250,14 @@ namespace SmartHome.Service
                             this.CheckConfigName<IController>(config.Name, this.Controllers, elemName);
 
                             IController controller = (IController)config;
-                            controller.ID = this.webAPIManager.Save<DeviceModel>(new DeviceModel { Name = controller.Name, Type = new DeviceTypeModel { ID = controller.TypeID } }).ID;
+                            controller.ID = this.webAPIManager.Save<DeviceModel>(new DeviceModel { Name = controller.Name, Type = new DeviceTypeModel { Id = controller.TypeID } }).Id;
                             this.Controllers.Add(controller);
                             break;
                         case "sensor":
                             this.CheckConfigName<ISensor>(config.Name, this.Sensors, elemName);
 
                             ISensor sensor = (ISensor)config;
-                            sensor.ID = this.webAPIManager.Save<SmartHome.Core.Models.SensorModel>(new SmartHome.Core.Models.SensorModel { Name = sensor.Name, Type = new DeviceTypeModel { ID = sensor.TypeID } }).ID;
+                            sensor.ID = this.webAPIManager.Save<SmartHome.Core.Models.DeviceModel>(new SmartHome.Core.Models.DeviceModel { Name = sensor.Name, Type = new DeviceTypeModel { Id = sensor.TypeID } }).Id;
                             this.Sensors.Add(sensor);
                             break;
                         case "trigger":
@@ -304,7 +304,7 @@ namespace SmartHome.Service
                             ISensor triggerSensor = searchSensorResult.First();
                             triggerSensor.onChange += trigger.Invoke;
 
-                            trigger.ID = this.webAPIManager.Save<SmartHome.Core.Models.TriggerModel>(new SmartHome.Core.Models.TriggerModel { Name = trigger.Name, Condition = trigger.Condition, Type = new DeviceTypeModel { ID = trigger.TypeID }, Device = new DeviceModel { ID = trigger.Controller.ID }, Sensor = new SmartHome.Core.Models.SensorModel { ID = triggerSensor.ID } }).ID;
+                            trigger.ID = this.webAPIManager.Save<SmartHome.Core.Models.TriggerModel>(new SmartHome.Core.Models.TriggerModel { Name = trigger.Name, Condition = trigger.Condition, Device = new DeviceModel { Id = trigger.Controller.ID }, Sensor = new SmartHome.Core.Models.DeviceModel { Id = triggerSensor.ID } }).Id;
                             this.Triggers.Add(trigger);
                             break;
                         default:
@@ -351,10 +351,10 @@ namespace SmartHome.Service
         private void UpdateConfigs<TModel, TConfig>(List<TConfig> configs) where TModel : class, IDeviceModel where TConfig : class, IConfig
         {
             List<TModel> allDevices = this.webAPIManager.Get<TModel>();
-            List<TModel> deletedDevices = allDevices.Where(d => !configs.Any(c => c.ID == d.ID)).ToList();
+            List<TModel> deletedDevices = allDevices.Where(d => !configs.Any(c => c.ID == d.Id)).ToList();
             foreach (var deletedDevice in deletedDevices)
             {
-                this.webAPIManager.Delete<TModel>(deletedDevice.ID);
+                this.webAPIManager.Delete<TModel>(deletedDevice.Id);
             }
         }
 

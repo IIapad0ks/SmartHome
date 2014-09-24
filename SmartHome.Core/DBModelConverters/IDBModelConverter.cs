@@ -9,7 +9,7 @@ namespace SmartHome.Core.DBModelConverters
 {
     public interface IDBModelConverter<T, TEntity> : IDisposable where T : class, IModel where TEntity : class, IEntity
     {
-        List<T> GetAll();
+        List<T> Get();
         List<T> Get(Func<TEntity, bool> expression);
         T Get(int id);
         T Add(T item);

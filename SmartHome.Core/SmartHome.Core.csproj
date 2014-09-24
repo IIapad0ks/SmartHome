@@ -52,11 +52,13 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.2-beta1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.2-beta1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json">
@@ -87,7 +89,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DBModelConverters\IDeviceDetailsConverter.cs" />
+    <Compile Include="DBModelConverters\IDeviceClassConverter.cs" />
+    <Compile Include="DBModelConverters\IEventLogConverter.cs" />
+    <Compile Include="DBModelConverters\IRoomConverter.cs" />
+    <Compile Include="Entities\DeviceClass.cs" />
     <Compile Include="Entities\EventAction.cs" />
     <Compile Include="Entities\Device.cs" />
     <Compile Include="Entities\DeviceType.cs" />
@@ -96,44 +101,40 @@
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Entities\INameEntity.cs" />
     <Compile Include="Entities\ISmartHomeDBContext.cs" />
-    <Compile Include="Entities\Sensor.cs" />
+    <Compile Include="Entities\Room.cs" />
     <Compile Include="Entities\SmartHomeDBContext.cs" />
-    <Compile Include="Entities\SmartHomeService.cs" />
+    <Compile Include="Entities\SHService.cs" />
     <Compile Include="Entities\Trigger.cs" />
     <Compile Include="Exceptions\SmartHomeConfigException.cs" />
     <Compile Include="Exceptions\SmartHomeException.cs" />
     <Compile Include="Exceptions\SmartHomePluginException.cs" />
-    <Compile Include="Migrations\201409091321313_init.cs" />
-    <Compile Include="Migrations\201409091321313_init.Designer.cs">
-      <DependentUpon>201409091321313_init.cs</DependentUpon>
+    <Compile Include="Migrations\201409240921578_init.cs" />
+    <Compile Include="Migrations\201409240921578_init.Designer.cs">
+      <DependentUpon>201409240921578_init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201409241146576_fixSomeSettings.cs" />
+    <Compile Include="Migrations\201409241146576_fixSomeSettings.Designer.cs">
+      <DependentUpon>201409241146576_fixSomeSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\DeviceDetailsModel.cs" />
+    <Compile Include="Models\DeviceClassModel.cs" />
     <Compile Include="Models\DeviceModel.cs" />
-    <Compile Include="Models\DeviceBaseModel.cs" />
     <Compile Include="Models\DeviceTypeModel.cs" />
-    <Compile Include="Models\EventActionModel.cs" />
+    <Compile Include="Models\ActionModel.cs" />
     <Compile Include="Models\EventLogModel.cs" />
     <Compile Include="Models\IDeviceModel.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\INameModel.cs" />
-    <Compile Include="Models\Model.cs" />
-    <Compile Include="Models\NameModel.cs" />
-    <Compile Include="Models\SensorDetailsModel.cs" />
-    <Compile Include="Models\SensorModel.cs" />
+    <Compile Include="Models\RoomModel.cs" />
     <Compile Include="Models\SHServiceModel.cs" />
-    <Compile Include="Models\TriggerDetailsModel.cs" />
     <Compile Include="Models\TriggerModel.cs" />
     <Compile Include="DBModelConverters\IActionConverter.cs" />
     <Compile Include="DBModelConverters\IDBModelConverter.cs" />
     <Compile Include="DBModelConverters\IDeviceConverter.cs" />
     <Compile Include="DBModelConverters\IDeviceTypeConverter.cs" />
     <Compile Include="DBModelConverters\IDBModelNameConverter.cs" />
-    <Compile Include="DBModelConverters\IEventLogConverter.cs" />
-    <Compile Include="DBModelConverters\ISensorConverter.cs" />
     <Compile Include="DBModelConverters\ISHServiceConverter.cs" />
     <Compile Include="DBModelConverters\ITriggerConverter.cs" />
-    <Compile Include="Service\PageResult.cs" />
     <Compile Include="Service\WebAPIManager.cs" />
     <Compile Include="SIManager.cs" />
     <Compile Include="SmartHome\Config.cs" />
@@ -178,8 +179,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201409091321313_init.resx">
-      <DependentUpon>201409091321313_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201409240921578_init.resx">
+      <DependentUpon>201409240921578_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201409241146576_fixSomeSettings.resx">
+      <DependentUpon>201409241146576_fixSomeSettings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

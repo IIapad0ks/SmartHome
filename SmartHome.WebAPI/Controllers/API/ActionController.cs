@@ -1,6 +1,5 @@
 ﻿using SmartHome.Core.DBModelConverters;
 using SmartHome.Core.Models;
-using SmartHome.Core.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,41 +9,41 @@ using System.Web.Http;
 
 namespace SmartHome.WebAPI.Controllers
 {
-    public class DeviceTypeController : ApiController
+    public class ActionController : ApiController
     {
-        IDeviceTypeConverter repository;
+        IActionConverter repository;
 
-        public DeviceTypeController(IDeviceTypeConverter repository)
+        public ActionController(IActionConverter repository)
         {
             this.repository = repository;
         }
 
-        // GET api/devicetype
-        public List<DeviceTypeModel> Get()
+        // GET api/action
+        public List<ActionModel> Get()
         {
             return this.repository.Get();
         }
 
-        // GET api/devicetype/5
-        public DeviceTypeModel Get(int id)
+        // GET api/action/5
+        public ActionModel Get(int id)
         {
             return this.repository.Get(id);
         }
 
-        // POST api/devicetype
-        public DeviceTypeModel Post([FromBody]DeviceTypeModel item)
+        // POST api/action
+        public ActionModel Post([FromBody]ActionModel item)
         {
             return this.repository.Add(item);
         }
 
-        // PUT api/devicetype/5
-        public bool Put(int id, [FromBody]DeviceTypeModel item)
+        // PUT api/action/5
+        public bool Put(int id, [FromBody]ActionModel item)
         {
             item.Id = id;
             return this.repository.Update(item);
         }
 
-        // DELETE api/devicetype/5
+        // DELETE api/action/5
         public bool Delete(int id)
         {
             return this.repository.Remove(id);

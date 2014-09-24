@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SmartHome.Core.Models
 {
     public class EventLogModel : IModel
     {
-        public int ID { get; set; }
-        public int DeviceID { get; set; }
-        public DeviceTypeModel Type { get; set; }
-        public EventActionModel Action { get; set; }
-        public string DeviceState { get; set; }
-        public DateTime EventDatetime { get; set; }
+        public int Id { get; set; }
+        public DateTime Datetime { get; set; }
+        public string State { get; set; }
+        public virtual ActionModel Action { get; set; }
+        public virtual DeviceModel Device { get; set; }
     }
 }

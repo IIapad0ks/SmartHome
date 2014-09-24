@@ -11,18 +11,16 @@ namespace SmartHome.Core.Entities
     public class EventLog : IEntity
     {
         [Key]
-        public int ID { get; set; }
-        public int ConfigID { get; set; }
+        public int Id { get; set; }
+        public DateTime Datetime { get; set; }
+        public string State { get; set; }
 
-        [ForeignKey("DeviceType")]
-        public int DeviceTypeID { get; set; }
-        public virtual DeviceType DeviceType { get; set; }
+        [ForeignKey("Action")]
+        public int ActionId { get; set; }
+        public virtual EventAction Action { get; set; }
 
-        [ForeignKey("EventAction")]
-        public int EventActionID { get; set; }
-        public virtual EventAction EventAction { get; set; }
-
-        public string DeviceState { get; set; }
-        public DateTime EventDatetime { get; set; }
+        [ForeignKey("Device")]
+        public int DeviceId { get; set; }
+        public virtual Device Device { get; set; }
     }
 }

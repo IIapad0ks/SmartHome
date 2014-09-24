@@ -3,5 +3,5 @@ using SmartHome.Core.Models;
 
 namespace SmartHome.Core.DBModelConverters
 {
-    public interface IDeviceConverter<T> : IDBModelNameConverter<T, Device> where T : DeviceModel { }
+    public interface IDeviceConverter : IDBModelNameConverter<DeviceModel, Device> { }
 }

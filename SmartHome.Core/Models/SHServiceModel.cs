@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Core.Models
 {
-    public class SHServiceModel : NameModel, INameModel
+    public class SHServiceModel : INameModel
     {
-        public string ConfigFilename { get; set; }
-        public string LibDirname { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
         public bool IsOn { get; set; }
     }
 }

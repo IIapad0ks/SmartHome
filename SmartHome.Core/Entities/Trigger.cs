@@ -8,23 +8,24 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Core.Entities
 {
-    public class Trigger : IDeviceEntity
+    public class Trigger : INameEntity
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
+        public int SetValue { get; set; }
 
-        [ForeignKey("DeviceType")]
-        public int DeviceTypeID { get; set; }
-        public virtual DeviceType DeviceType { get; set; }
+        [ForeignKey("EventAction")]
+        public int EventActionId { get; set; }
+        public virtual EventAction EventAction { get; set; }
 
         [ForeignKey("Device")]
-        public int DeviceID { get; set; }
+        public int DeviceId { get; set; }
         public virtual Device Device { get; set; }
 
         [ForeignKey("Sensor")]
-        public int SensorID { get; set; }
-        public virtual Sensor Sensor { get; set; }
+        public int SensorId { get; set; }
+        public virtual Device Sensor { get; set; }
 
         public string Condition { get; set; }
     }

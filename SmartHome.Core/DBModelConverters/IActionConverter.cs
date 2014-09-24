@@ -3,5 +3,5 @@ using SmartHome.Core.Models;
 
 namespace SmartHome.Core.DBModelConverters
 {
-    public interface IActionConverter : IDBModelNameConverter<EventActionModel, EventAction> { }
+    public interface IActionConverter : IDBModelNameConverter<ActionModel, EventAction> { }
 }

@@ -8,5 +8,5 @@ using SmartHome.Core.Entities;
 
 namespace SmartHome.Core.DBModelConverters
 {
-    public interface ITriggerConverter<T> : IDBModelNameConverter<T, Trigger> where T : TriggerModel { }
+    public interface ITriggerConverter : IDBModelNameConverter<TriggerModel, Trigger> { }
 }

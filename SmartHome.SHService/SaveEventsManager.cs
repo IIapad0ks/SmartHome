@@ -38,11 +38,10 @@ namespace SmartHome.Service
             {
                 this.Events.Add(new EventLogModel
                 {
-                    Type = new DeviceTypeModel { ID = config.TypeID },
-                    DeviceID = config.ID,
-                    DeviceState = writer.ToString(),
-                    Action = new SmartHome.Core.Models.EventActionModel { Name = actionName },
-                    EventDatetime = DateTime.Now
+                    Device = new DeviceModel { Id = config.ID },
+                    State = writer.ToString(),
+                    Action = new SmartHome.Core.Models.ActionModel { Name = actionName },
+                    Datetime = DateTime.Now
                 });
             }
         }

@@ -9,12 +9,12 @@ namespace SmartHome.Core.Entities
 {
     public interface ISmartHomeDBContext
     {
-        DbSet<EventAction> EventActions { get; set; }
+        DbSet<EventAction> Actions { get; set; }
         DbSet<Device> Devices { get; set; }
         DbSet<DeviceType> DeviceTypes { get; set; }
-        DbSet<EventLog> EventLogs { get; set; }
-        DbSet<Sensor> Sensors { get; set; }
         DbSet<Trigger> Triggers { get; set; }
-        DbSet<SmartHomeService> SmartHomeServices { get; set; }
+        DbSet<SHService> SHServices { get; set; }
+        DbSet<Room> Rooms { get; set; }
+        DbSet<DeviceClass> DeviceClasses { get; set; }
     }
 }

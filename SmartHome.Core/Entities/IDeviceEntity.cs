@@ -7,6 +7,6 @@ namespace SmartHome.Core.Entities
 {
     public interface IDeviceEntity : INameEntity
     {
-        int DeviceTypeID { get; set; }
+        int DeviceTypeId { get; set; }
     }
 }

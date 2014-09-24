@@ -5,8 +5,12 @@ using System.Web;
 
 namespace SmartHome.Core.Models
 {
-    public class DeviceTypeModel : NameModel, INameModel
+    public class DeviceTypeModel : INameModel
     {
-        public DeviceTypeModel Parent { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool NeedTimeControl { get; set; }
+        public bool HasValue { get; set; }
+        public DeviceClassModel Class { get; set; }
     }
 }

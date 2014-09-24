@@ -48,18 +48,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Repositories\ActionConverter.cs" />
-    <Compile Include="Repositories\DBModelDeviceConverter.cs" />
     <Compile Include="Repositories\DBModelNameConverter.cs" />
-    <Compile Include="Repositories\DeviceDetailsConverter.cs" />
+    <Compile Include="Repositories\DeviceClassConverter.cs" />
     <Compile Include="Repositories\DeviceConverter.cs" />
     <Compile Include="Repositories\DeviceTypeConverter.cs" />
     <Compile Include="Repositories\EventLogConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DBModelConverter.cs" />
-    <Compile Include="Repositories\SensorDetailsConverter.cs" />
-    <Compile Include="Repositories\SensorConverter.cs" />
+    <Compile Include="Repositories\RoomConverter.cs" />
     <Compile Include="Repositories\SHServiceConverter.cs" />
-    <Compile Include="Repositories\TriggerDetailsConverter.cs" />
     <Compile Include="Repositories\TriggerConverter.cs" />
   </ItemGroup>
   <ItemGroup>

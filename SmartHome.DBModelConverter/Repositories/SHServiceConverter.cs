@@ -5,24 +5,20 @@ using SmartHome.Core.DBModelConverters;
 
 namespace SmartHome.DBModelConverter.Repositories
 {
-    public class SHServiceConverter : DBModelNameConverter<SHServiceModel, SmartHomeService>, ISHServiceConverter
+    public class SHServiceConverter : DBModelNameConverter<SHServiceModel, SHService>, ISHServiceConverter
     {
         public SHServiceConverter(ISHRepository repository) : base(repository) { }
 
-        public override SHServiceModel DBItemToItem(SmartHomeService dbItem)
+        public override SHServiceModel DBItemToItem(SHService dbItem)
         {
             SHServiceModel item = base.DBItemToItem(dbItem);
-            item.ConfigFilename = dbItem.ConfigFilename; 
-            item.LibDirname = dbItem.LibsDirname;
             item.IsOn = dbItem.IsOn;
             return item;
         }
 
-        public override SmartHomeService ItemToDBItem(SHServiceModel item)
+        public override SHService ItemToDBItem(SHServiceModel item)
         {
-            SmartHomeService dbItem = base.ItemToDBItem(item);
-            dbItem.ConfigFilename = item.ConfigFilename;
-            dbItem.LibsDirname = item.LibDirname;
+            SHService dbItem = base.ItemToDBItem(item);
             dbItem.IsOn = item.IsOn;
             return dbItem;
         }
