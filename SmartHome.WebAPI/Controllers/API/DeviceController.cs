@@ -30,37 +30,15 @@ namespace SmartHome.WebAPI.Controllers
             return this.repository.Get(id);
         }
 
-        // GET api/device/room/5
-        [HttpGet]
-        public List<DeviceModel> Room(int id)
-        {
-            return this.repository.Get(d => d.RoomId == id);
-        }
-
-        // GET api/device/device
-        [HttpGet]
-        public List<DeviceModel> Device()
-        {
-            return this.repository.Get(d => d.DeviceType.DeviceClassId == 1);
-        }
-
-        // GET api/device/sensor
-        [HttpGet]
-        public List<DeviceModel> Sensor()
-        {
-            return this.repository.Get(d => d.DeviceType.DeviceClassId == 2);
-        }
-
         // POST api/device
         public DeviceModel Post([FromBody]DeviceModel item)
         {
             return this.repository.Add(item);
         }
 
-        // PUT api/device/5
-        public bool Put(int id, [FromBody]DeviceModel item)
+        // PUT api/device
+        public bool Put([FromBody]DeviceModel item)
         {
-            item.Id = id;
             return this.repository.Update(item);
         }
 

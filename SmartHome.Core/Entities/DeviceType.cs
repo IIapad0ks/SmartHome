@@ -15,6 +15,9 @@ namespace SmartHome.Core.Entities
         public string Name { get; set; }
         public bool NeedTimeControl { get; set; }
         public bool HasValue { get; set; }
+        public string Symbol { get; set; }
+        public int MinValue { get; set; }
+        public int MaxValue { get; set; }
 
         [ForeignKey("DeviceClass")]
         public int DeviceClassId { get; set; }

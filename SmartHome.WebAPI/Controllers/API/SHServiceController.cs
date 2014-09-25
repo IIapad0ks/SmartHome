@@ -37,10 +37,9 @@ namespace SmartHome.WebAPI.Controllers
             return this.repository.Add(item);
         }
 
-        // PUT api/shservice/5
-        public bool Put(int id, [FromBody]SHServiceModel item)
+        // PUT api/shservice
+        public bool Put([FromBody]SHServiceModel item)
         {
-            item.Id = id;
             return this.repository.Update(item);
         }
 

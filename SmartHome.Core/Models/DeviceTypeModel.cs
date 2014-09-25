@@ -11,6 +11,9 @@ namespace SmartHome.Core.Models
         public string Name { get; set; }
         public bool NeedTimeControl { get; set; }
         public bool HasValue { get; set; }
+        public string Symbol { get; set; }
+        public int MinValue { get; set; }
+        public int MaxValue { get; set; }
         public DeviceClassModel Class { get; set; }
     }
 }

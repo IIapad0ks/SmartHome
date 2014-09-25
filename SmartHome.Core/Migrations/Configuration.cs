@@ -23,12 +23,12 @@ namespace SmartHome.Core.Migrations
             DeviceClass device = context.DeviceClasses.Add(new DeviceClass { Name = "Device" });
             DeviceClass sensor = context.DeviceClasses.Add(new DeviceClass { Name = "Sensor" });
 
-            DeviceType conditioner = context.DeviceTypes.Add(new DeviceType { Name = "Conditioner", DeviceClass = device, NeedTimeControl = false, HasValue = true });
-            DeviceType light = context.DeviceTypes.Add(new DeviceType { Name = "Light", DeviceClass = device, NeedTimeControl = false, HasValue = true });
+            DeviceType conditioner = context.DeviceTypes.Add(new DeviceType { Name = "Conditioner", DeviceClass = device, NeedTimeControl = false, HasValue = true, Symbol = "C", MinValue = -50, MaxValue = 50 });
+            DeviceType light = context.DeviceTypes.Add(new DeviceType { Name = "Light", DeviceClass = device, NeedTimeControl = false, HasValue = true, Symbol = "%", MinValue = 0, MaxValue = 100 });
             DeviceType simpleLamp = context.DeviceTypes.Add(new DeviceType { Name = "SimpleLamp", DeviceClass = device, NeedTimeControl = false });
-            DeviceType temperatureSensor = context.DeviceTypes.Add(new DeviceType { Name = "TemperatureSensor", DeviceClass = sensor, NeedTimeControl = false, HasValue = true });
-            DeviceType lightSensor = context.DeviceTypes.Add(new DeviceType { Name = "LightSensor", DeviceClass = sensor, NeedTimeControl = false, HasValue = true });
-            DeviceType window = context.DeviceTypes.Add(new DeviceType { Name = "Window", DeviceClass = device, NeedTimeControl = true, HasValue = true });
+            DeviceType temperatureSensor = context.DeviceTypes.Add(new DeviceType { Name = "TemperatureSensor", DeviceClass = sensor, NeedTimeControl = false, HasValue = true, Symbol = "C", MinValue = -100, MaxValue = 100 });
+            DeviceType lightSensor = context.DeviceTypes.Add(new DeviceType { Name = "LightSensor", DeviceClass = sensor, NeedTimeControl = false, HasValue = true, Symbol = "%", MinValue = 0, MaxValue = 100 });
+            DeviceType window = context.DeviceTypes.Add(new DeviceType { Name = "Window", DeviceClass = device, NeedTimeControl = true, HasValue = true, Symbol = "%", MinValue = 0, MaxValue = 100 });
 
             Device roomConditioner = context.Devices.Add(new Device { DeviceType = conditioner, FastAccess = true, IsOn = true, Name = "Room conditioner", Room = room, Value = 23 });
             Device roomLight = context.Devices.Add(new Device { DeviceType = light, FastAccess = true, IsOn = true, Name = "Room light", Room = room, Value = 25 });

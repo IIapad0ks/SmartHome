@@ -19,10 +19,10 @@ namespace SmartHome.DBModelConverter.Repositories
         {
             TriggerModel item = base.DBItemToItem(dbItem);
 
-            item.Action = SIManager.Container.GetInstance<IActionConverter>().DBItemToItem(dbItem.EventAction);
+            item.Action = SIManager.Container.GetInstance<IActionConverter>().Get(dbItem.EventActionId);
             item.Condition = dbItem.Condition;
-            item.Device = SIManager.Container.GetInstance<IDeviceConverter>().DBItemToItem(dbItem.Device);
-            item.Sensor = SIManager.Container.GetInstance<IDeviceConverter>().DBItemToItem(dbItem.Sensor);
+            item.Device = SIManager.Container.GetInstance<IDeviceConverter>().Get(dbItem.DeviceId);
+            item.Sensor = SIManager.Container.GetInstance<IDeviceConverter>().Get(dbItem.SensorId);
             item.SetValue = dbItem.SetValue;
 
             return item;

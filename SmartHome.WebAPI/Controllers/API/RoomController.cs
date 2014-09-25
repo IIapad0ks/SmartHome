@@ -37,9 +37,8 @@ namespace SmartHome.WebAPI.Controllers
         }
 
         // PUT api/room/5
-        public bool Put(int id, [FromBody]RoomModel item)
+        public bool Put([FromBody]RoomModel item)
         {
-            item.Id = id;
             return this.repository.Update(item);
         }
 

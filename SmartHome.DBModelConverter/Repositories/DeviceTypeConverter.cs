@@ -20,7 +20,10 @@ namespace SmartHome.DBModelConverter.Repositories
 
             item.NeedTimeControl = dbItem.NeedTimeControl;
             item.HasValue = dbItem.HasValue;
-            item.Class = SIManager.Container.GetInstance<IDeviceClassConverter>().DBItemToItem(dbItem.DeviceClass);
+            item.Class = SIManager.Container.GetInstance<IDeviceClassConverter>().Get(dbItem.DeviceClassId);
+            item.Symbol = dbItem.Symbol;
+            item.MaxValue = dbItem.MaxValue;
+            item.MinValue = dbItem.MinValue;
 
             return item; 
         }
@@ -32,6 +35,9 @@ namespace SmartHome.DBModelConverter.Repositories
             dbItem.DeviceClassId = item.Class.Id;
             dbItem.HasValue = item.HasValue;
             dbItem.NeedTimeControl = item.NeedTimeControl;
+            dbItem.Symbol = item.Symbol;
+            dbItem.MaxValue = item.MaxValue;
+            dbItem.MinValue = item.MinValue;
 
             return dbItem;
         }

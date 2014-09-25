@@ -36,10 +36,9 @@ namespace SmartHome.WebAPI.Controllers
             return this.repository.Add(item);
         }
 
-        // PUT api/action/5
-        public bool Put(int id, [FromBody]ActionModel item)
+        // PUT api/action
+        public bool Put([FromBody]ActionModel item)
         {
-            item.Id = id;
             return this.repository.Update(item);
         }
 

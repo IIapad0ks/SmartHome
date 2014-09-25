@@ -23,7 +23,7 @@ namespace SmartHome.Data.Repositories
 
         public IQueryable<T> Get<T>(Func<T, bool> expression) where T : class, IEntity
         {
-            return db.Set<T>().Where(expression).AsQueryable();
+            return db.Set<T>().ToList().Where(expression).AsQueryable();
         }
 
         public T Get<T>(int id) where T : class, IEntity

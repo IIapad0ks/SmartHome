@@ -38,10 +38,9 @@ namespace SmartHome.WebAPI.Controllers
             this.repository.Add(item);
         }
 
-        // PUT api/eventlog/5
-        public bool Put(int id, [FromBody]EventLogModel item)
+        // PUT api/eventlog
+        public bool Put([FromBody]EventLogModel item)
         {
-            item.Id = id;
             return this.repository.Update(item);
         }
 

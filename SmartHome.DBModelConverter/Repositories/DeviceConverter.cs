@@ -20,8 +20,8 @@ namespace SmartHome.DBModelConverter.Repositories
 
             item.FastAccess = dbItem.FastAccess;
             item.IsOn = dbItem.IsOn;
-            item.Room = SIManager.Container.GetInstance<IRoomConverter>().DBItemToItem(dbItem.Room);
-            item.Type = SIManager.Container.GetInstance<IDeviceTypeConverter>().DBItemToItem(dbItem.DeviceType);
+            item.Room = SIManager.Container.GetInstance<IRoomConverter>().Get(dbItem.RoomId);
+            item.Type = SIManager.Container.GetInstance<IDeviceTypeConverter>().Get(dbItem.DeviceTypeId);
             item.Value = dbItem.Value;
             item.WorkingTime = dbItem.WorkingTime;
 

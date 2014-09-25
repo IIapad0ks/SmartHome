@@ -18,7 +18,7 @@ namespace SmartHome.DBModelConverter.Repositories
         public override RoomModel DBItemToItem(Room dbItem)
         {
             RoomModel item = base.DBItemToItem(dbItem);
-            item.Home = SIManager.Container.GetInstance<ISHServiceConverter>().DBItemToItem(dbItem.SHService);
+            item.Home = SIManager.Container.GetInstance<ISHServiceConverter>().Get(dbItem.SHServiceId);
             return item;
         }
 

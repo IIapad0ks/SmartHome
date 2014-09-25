@@ -18,9 +18,9 @@ namespace SmartHome.DBModelConverter.Repositories
         {
             EventLogModel item = base.DBItemToItem(dbItem);
 
-            item.Action = SIManager.Container.GetInstance<IActionConverter>().DBItemToItem(dbItem.Action);
+            item.Action = SIManager.Container.GetInstance<IActionConverter>().Get(dbItem.ActionId);
             item.Datetime = dbItem.Datetime;
-            item.Device = SIManager.Container.GetInstance<IDeviceConverter>().DBItemToItem(dbItem.Device);
+            item.Device = SIManager.Container.GetInstance<IDeviceConverter>().Get(dbItem.DeviceId);
             item.State = dbItem.State;
 
             return item;

@@ -116,6 +116,10 @@
     <Compile Include="Migrations\201409241146576_fixSomeSettings.Designer.cs">
       <DependentUpon>201409241146576_fixSomeSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201409251519377_addSymbolAndRange.cs" />
+    <Compile Include="Migrations\201409251519377_addSymbolAndRange.Designer.cs">
+      <DependentUpon>201409251519377_addSymbolAndRange.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DeviceClassModel.cs" />
     <Compile Include="Models\DeviceModel.cs" />
@@ -184,6 +188,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201409241146576_fixSomeSettings.resx">
       <DependentUpon>201409241146576_fixSomeSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201409251519377_addSymbolAndRange.resx">
+      <DependentUpon>201409251519377_addSymbolAndRange.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
